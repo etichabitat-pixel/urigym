@@ -4,7 +4,7 @@ import { WORKOUTS, getSetsForPhase, GYM_WARMUP, COOLDOWN_STRETCH } from '../data
 import { getExerciseById } from '../data/exercises.js';
 import { OUTDOOR_OPTIONS, getOutdoorOptionById } from '../data/outdoor.js';
 import { RECOVERY_OPTIONS, getRecoveryOptionById } from '../data/recovery.js';
-import { renderPoseSvg } from '../data/poses.js';
+import { renderExerciseVisual } from './exerciseVisual.js';
 
 const state = {
   variant: 'gym',
@@ -50,13 +50,13 @@ function daysSinceLastSession(rows, today = new Date()) {
 function motivationalBanner(daysSince) {
   if (daysSince === null || daysSince < 2) return '';
   return `
-    <div class="card" style="border-left: 4px solid var(--color-navy);">
+    <div class="card" style="border-left: 4px solid var(--color-primary);">
       <p>💪 Fa ${daysSince} dies que no marques cap sessió com a feta. Avui és un bon dia per tornar-hi!</p>
     </div>
   `;
 }
 
-function exerciseRow(item, phase) {
+async function exerciseRow(item, phase) {
   const ex = getExerciseById(item.exerciseId);
   const sets = getSetsForPhase(item.baseSets, phase);
   const display = state.variant === 'casaCurt' ? ex.homeShort : state.variant === 'casaComplet' ? ex.homeFull : null;
@@ -70,22 +70,27 @@ function exerciseRow(item, phase) {
         <div data-expand-id="${ex.id}" style="cursor:pointer">
           <strong>${label}</strong> — ${sets}×${item.reps}
         </div>
-        ${expanded ? renderExerciseDetail(ex, display) : ''}
+        ${expanded ? await renderExerciseDetail(ex, display) : ''}
       </div>
     </div>
   `;
 }
 
-function renderExerciseDetail(ex, homeInfo) {
+async function renderExerciseDetail(ex, homeInfo) {
+  const savedWeight = await get('exerciseWeights', ex.id);
   return `
     <div class="card" style="margin-top:8px">
-      <div style="width:80px">${renderPoseSvg(ex.pose)}</div>
+      ${renderExerciseVisual(ex)}
+      <div class="weight-field">
+        <label for="weight-${ex.id}">Pes que faig servir:</label>
+        <input type="number" step="0.5" id="weight-${ex.id}" data-weight-id="${ex.id}" value="${savedWeight ? savedWeight.weight : ''}" placeholder="kg">
+      </div>
       <p><strong>Com fer-ho:</strong></p>
       <ul>${ex.cues.map((c) => `<li>${c}</li>`).join('')}</ul>
       <p><strong>Errors comuns:</strong></p>
       <ul>${ex.commonMistakes.map((c) => `<li>${c}</li>`).join('')}</ul>
       ${homeInfo ? `<p><strong>${homeInfo.name}:</strong> ${homeInfo.notes}</p>` : ''}
-      ${ex.videoUrl ? `<a href="${ex.videoUrl}" target="_blank" rel="noopener">Veure vídeo</a>` : '<p><em>Vídeo pendent — es veu igualment el diagrama i els consells.</em></p>'}
+      ${ex.videoUrl ? `<a class="video-link-secondary" href="${ex.videoUrl}" target="_blank" rel="noopener">▶ Vídeo tutorial complet (opcional)</a>` : ''}
     </div>
   `;
 }
@@ -108,8 +113,9 @@ function cooldownSection() {
   `;
 }
 
-function gymDayHtml(letter, status, alreadyDone) {
+async function gymDayHtml(letter, status, alreadyDone) {
   const template = WORKOUTS[letter][state.variant];
+  const rows = await Promise.all(template.map((item) => exerciseRow(item, status.phase)));
   return `
     <h2>Avui: Sessió ${letter} — ${status.phase} (setmana ${status.week})</h2>
     <div class="segmented">
@@ -120,7 +126,7 @@ function gymDayHtml(letter, status, alreadyDone) {
     ${warmupSection()}
     <div class="card">
       <h3>Exercicis</h3>
-      ${template.map((item) => exerciseRow(item, status.phase)).join('')}
+      ${rows.join('')}
     </div>
     ${cooldownSection()}
     <button class="primary" id="mark-done" ${alreadyDone ? 'disabled' : ''}>${alreadyDone ? 'Sessió feta ✓' : 'Marcar sessió com a feta'}</button>
@@ -181,7 +187,7 @@ export async function renderTodayScreen(container) {
     body = restDayHtml();
   } else if (sessionType === 'gym') {
     const letter = getGymLetterForDate(today, start);
-    body = gymDayHtml(letter, status, alreadyDone);
+    body = await gymDayHtml(letter, status, alreadyDone);
   } else if (sessionType === 'recovery') {
     body = recoveryDayHtml(alreadyDone);
   } else {
@@ -221,6 +227,13 @@ function attachTodayListeners(container, sessionType) {
     el.addEventListener('change', () => {
       if (el.checked) state.checked.add(el.dataset.exerciseId);
       else state.checked.delete(el.dataset.exerciseId);
+    });
+  });
+  container.querySelectorAll('[data-weight-id]').forEach((el) => {
+    el.addEventListener('change', async () => {
+      const weight = parseFloat(el.value);
+      if (!weight || weight <= 0) return;
+      await put('exerciseWeights', { exerciseId: el.dataset.weightId, weight, updatedAt: new Date().toISOString() });
     });
   });
   const markBtn = container.querySelector('#mark-done');

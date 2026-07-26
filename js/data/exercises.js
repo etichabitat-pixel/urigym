@@ -6,6 +6,7 @@ export const EXERCISES = [
     sessionOf: 'A',
     pose: 'bent',
     videoUrl: 'https://www.youtube.com/watch?v=BjixzWEw4EY',
+    referenceImage: { url: 'https://wger.de/media/exercise-images/1801/60043328-1cfb-4289-9865-aaf64d5aaa28.jpg', license: 'CC-BY-SA 4', licenseUrl: 'https://creativecommons.org/licenses/by-sa/4.0/deed.en', author: "fabrice", source: 'wger.de' },
     cues: [
       "Peus a l'amplada de les espatlles, punteres lleugerament cap enfora",
       "Baixa portant els malucs enrere i avall, com si t'asseguessis en una cadira",
@@ -28,6 +29,7 @@ export const EXERCISES = [
     sessionOf: 'A',
     pose: 'pushPosition',
     videoUrl: 'https://www.youtube.com/watch?v=7aQY3u0Dk-Q',
+    referenceImage: { url: 'https://wger.de/media/exercise-images/192/Bench-press-1.png', license: 'CC-BY-SA 3', licenseUrl: 'https://creativecommons.org/licenses/by-sa/3.0/deed.en', author: "sistab2", source: 'wger.de' },
     cues: [
       "Estirat al banc, omòplats enrere i avall, pit amunt",
       "Peus ben plantats a terra per estabilitat",
@@ -50,6 +52,7 @@ export const EXERCISES = [
     sessionOf: 'A',
     pose: 'pullPosition',
     videoUrl: 'https://www.youtube.com/watch?v=nwdptbhYjTw',
+    referenceImage: { url: 'https://wger.de/media/exercise-images/1117/2555c4c3-a84d-47db-b83b-cbf721f12e45.png', license: 'CC-BY-SA 4', licenseUrl: 'https://creativecommons.org/licenses/by-sa/4.0/deed.en', author: "Franpol", source: 'wger.de' },
     cues: [
       'Assegut, genolls lleugerament flexionats, esquena recta',
       "Estira els braços cap endavant sense arrodonir l'esquena",
@@ -72,6 +75,7 @@ export const EXERCISES = [
     sessionOf: 'A',
     pose: 'overhead',
     videoUrl: 'https://www.youtube.com/watch?v=o5M9RZ-vWrc',
+    referenceImage: { url: 'https://wger.de/media/exercise-images/123/dumbbell-shoulder-press-large-1.png', license: 'CC-BY-SA 3', licenseUrl: 'https://creativecommons.org/licenses/by-sa/3.0/deed.en', author: "wger.de", source: 'wger.de' },
     cues: [
       'Peus a l\'amplada de malucs, core actiu',
       'Mancuernes a l\'alçada de les espatlles, colzes davant',
@@ -94,6 +98,7 @@ export const EXERCISES = [
     sessionOf: 'A',
     pose: 'bent',
     videoUrl: 'https://www.youtube.com/watch?v=3aTb9Megbuo',
+    referenceImage: { url: 'https://wger.de/media/exercise-images/1642/a81ad922-caf5-47f8-99b4-640cb0717436.webp', license: 'CC-BY-SA 4', licenseUrl: 'https://creativecommons.org/licenses/by-sa/4.0/deed.en', author: "AlucardEvil40", source: 'wger.de' },
     cues: [
       'Esquena alta recolzada a un banc, peus plans a terra a l\'amplada de malucs',
       'Baixa els malucs cap a terra de manera controlada',
@@ -116,6 +121,7 @@ export const EXERCISES = [
     sessionOf: 'A',
     pose: 'plankPosition',
     videoUrl: 'https://www.youtube.com/watch?v=zfY5XXa26ug',
+    referenceImage: { url: 'https://wger.de/media/exercise-images/458/b7bd9c28-9f1d-4647-bd17-ab6a3adf5770.png', license: 'CC-BY-SA 3', licenseUrl: 'https://creativecommons.org/licenses/by-sa/3.0/deed.en', author: "YYCfit / BFad07", source: 'wger.de' },
     cues: [
       'Avantbraços a terra, colzes sota les espatlles',
       'Cos en línia recta del cap als talons',
@@ -138,6 +144,7 @@ export const EXERCISES = [
     sessionOf: 'B',
     pose: 'bent',
     videoUrl: 'https://www.youtube.com/watch?v=1IdDV6QbXas',
+    referenceImage: { url: 'https://wger.de/media/exercise-images/184/1709c405-620a-4d07-9658-fade2b66a2df.jpeg', license: 'CC-BY-SA 3', licenseUrl: 'https://creativecommons.org/licenses/by-sa/3.0/deed.en', author: "wger.de", source: 'wger.de' },
     cues: [
       "Peus a l'amplada de malucs, pes a prop de les canyelles",
       "Malucs enrere mantenint l'esquena recta (no arrodonida)",
@@ -160,6 +167,7 @@ export const EXERCISES = [
     sessionOf: 'B',
     pose: 'hangPosition',
     videoUrl: 'https://www.youtube.com/watch?v=SJYxLvg0dkA',
+    referenceImage: { url: 'https://wger.de/media/exercise-images/1127/4942b7c0-6bda-4983-88e5-86547c3d445e.png', license: 'CC-BY-SA 4', licenseUrl: 'https://creativecommons.org/licenses/by-sa/4.0/deed.en', author: "Franpol", source: 'wger.de' },
     cues: [
       "Agafa la barra una mica més ample que les espatlles",
       "Pit amunt, lleuger arc a l'esquena, sense balancejar-te",
@@ -185,6 +193,7 @@ export const EXERCISES = [
     sessionOf: 'B',
     pose: 'pushPosition',
     videoUrl: 'https://www.youtube.com/watch?v=MkMf308jXww',
+    referenceImage: { url: 'https://wger.de/media/exercise-images/16/Incline-press-1.png', license: 'CC-BY-SA 3', licenseUrl: 'https://creativecommons.org/licenses/by-sa/3.0/deed.en', author: "wger.de", source: 'wger.de' },
     cues: [
       "Banc a 30-45°, peus ben plantats a terra",
       "Mancuernes a l'alçada del pit superior, colzes ~45° del cos",
@@ -207,6 +216,7 @@ export const EXERCISES = [
     sessionOf: 'B',
     pose: 'bent',
     videoUrl: 'https://www.youtube.com/watch?v=R0d2xsmKq2E',
+    referenceImage: { url: 'https://wger.de/media/exercise-images/999/d0931eb3-8db0-4049-bb08-aa4036072056.jfif', license: 'CC-BY-SA 4', licenseUrl: 'https://creativecommons.org/licenses/by-sa/4.0/deed.en', author: "wger.de contributors", source: 'wger.de' },
     cues: [
       'Peus junts, fes una passa enrere amb una cama',
       "Baixa fins que ambdós genolls formin ~90°",
@@ -229,6 +239,7 @@ export const EXERCISES = [
     sessionOf: 'B',
     pose: 'armsOut',
     videoUrl: 'https://www.youtube.com/watch?v=b6KtNTSHA54',
+    referenceImage: { url: 'https://wger.de/media/exercise-images/1744/cb9263c4-39fc-4261-8d30-a5d6d57841c1.jpg', license: 'CC-BY-SA 4', licenseUrl: 'https://creativecommons.org/licenses/by-sa/4.0/deed.en', author: "Tierrasverdes", source: 'wger.de' },
     cues: [
       'Mancuernes als costats, lleuger flexió de colzes',
       "Eleva els braços cap als costats fins l'alçada de les espatlles",
@@ -251,6 +262,7 @@ export const EXERCISES = [
     sessionOf: 'B',
     pose: 'pullPosition',
     videoUrl: 'https://www.youtube.com/watch?v=X-xCQ1gh-kA',
+    referenceImage: { url: 'https://wger.de/media/exercise-images/1732/d13b9adb-968e-4f73-95e6-b16690bcf616.jpg', license: 'CC-BY-SA 4', licenseUrl: 'https://creativecommons.org/licenses/by-sa/4.0/deed.en', author: "54str", source: 'wger.de' },
     cues: [
       "Corda o banda a l'alçada de la cara",
       'Estira portant les mans cap a la cara, colzes alts',

@@ -55,7 +55,12 @@ function weightSparkline(entries) {
     const y = 90 - ((e.weight - min) / range) * 80;
     return `${x},${y}`;
   }).join(' ');
-  return `<svg viewBox="0 0 300 100" width="100%"><polyline points="${points}" fill="none" stroke="#1a5fa8" stroke-width="3"/></svg>`;
+  return `<svg viewBox="0 0 300 100" width="100%"><polyline points="${points}" fill="none" stroke="#34e4a0" stroke-width="3"/></svg>`;
+}
+
+function progressBar(current, total) {
+  const pct = Math.min(100, Math.round((current / total) * 100));
+  return `<div class="progress-bar"><div class="progress-bar-fill" style="width:${pct}%"></div></div>`;
 }
 
 export async function renderProgressScreen(container) {
@@ -67,16 +72,27 @@ export async function renderProgressScreen(container) {
 
   container.innerHTML = `
     <h2>Progrés</h2>
+    <div class="stat-row">
+      <div class="card">
+        <div class="stat-number">${doneThisWeek}/${expected}</div>
+        <div class="stat-label">Sessions aquesta setmana</div>
+      </div>
+      <div class="card">
+        <div class="stat-number">${streak}</div>
+        <div class="stat-label">${streak === 1 ? 'Setmana completa seguida' : 'Setmanes completes seguides'}</div>
+      </div>
+    </div>
     <div class="card">
-      <p><strong>Fase actual:</strong> ${status.phase} (setmana ${status.week} de 12)</p>
-      <p><strong>Aquesta setmana:</strong> ${doneThisWeek} de ${expected} sessions fetes</p>
-      <p><strong>Ratxa:</strong> ${streak} ${streak === 1 ? 'setmana completa seguida' : 'setmanes completes seguides'}</p>
+      <h3>Aquesta setmana</h3>
+      ${progressBar(doneThisWeek, expected)}
+      <h3 style="margin-top:16px;">Fase ${status.phase} — setmana ${status.week} de 12</h3>
+      ${progressBar(status.week, 12)}
     </div>
     <div class="card">
       <h3>Pes corporal</h3>
       ${weightSparkline(weightRows)}
-      <div style="display:flex; gap:8px; margin-top:8px;">
-        <input type="number" step="0.1" id="weight-input" placeholder="kg" style="flex:1; padding:8px; border-radius:8px; border:1px solid #ccc;">
+      <div style="display:flex; gap:8px; margin-top:12px;">
+        <input type="number" step="0.1" id="weight-input" placeholder="kg" style="flex:1;">
         <button class="secondary" id="add-weight">Afegir</button>
       </div>
     </div>

@@ -1,5 +1,5 @@
 const DB_NAME = 'urigym';
-const DB_VERSION = 1;
+const DB_VERSION = 2;
 
 function openDb() {
   return new Promise((resolve, reject) => {
@@ -19,6 +19,9 @@ function openDb() {
       if (!db.objectStoreNames.contains('weightLog')) {
         const store = db.createObjectStore('weightLog', { keyPath: 'id', autoIncrement: true });
         store.createIndex('date', 'date');
+      }
+      if (!db.objectStoreNames.contains('exerciseWeights')) {
+        db.createObjectStore('exerciseWeights', { keyPath: 'exerciseId' });
       }
     };
     request.onsuccess = () => resolve(request.result);

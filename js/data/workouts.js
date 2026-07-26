@@ -59,6 +59,25 @@ export function getSetsForPhase(baseSets, phase) {
   return baseSets; // Transformació = base, matches the spec's 3-4 sets
 }
 
+const SESSION_LABELS = {
+  gym: 'Gimnàs',
+  casaCurt: 'Casa (curt)',
+  casaComplet: 'Casa (complet)',
+};
+
+export function getWorkoutUsagesForExercise(exerciseId) {
+  const usages = [];
+  for (const letter of Object.keys(WORKOUTS)) {
+    for (const variant of Object.keys(WORKOUTS[letter])) {
+      const item = WORKOUTS[letter][variant].find((i) => i.exerciseId === exerciseId);
+      if (item) {
+        usages.push({ letter, variant, label: SESSION_LABELS[variant], baseSets: item.baseSets, reps: item.reps });
+      }
+    }
+  }
+  return usages;
+}
+
 export const GYM_WARMUP = [
   { phase: 'Raise', duration: '3-5 min', description: 'Bici estàtica o cinta suau per pujar les pulsacions.' },
   { phase: 'Activate/Mobilize', duration: '3 min', description: "Mobilitat dinàmica de malucs i espatlles, squats amb pes corporal, cat-cow." },
