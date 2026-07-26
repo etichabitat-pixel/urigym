@@ -5,14 +5,15 @@ export const PHASES = [
 ];
 
 // 0=Sun..6=Sat. Change here if the weekly pattern ever needs to move.
+// Sat/Sun resolve to 'recovery' or 'rest' depending on the biweekly kids schedule (see isFreeWeekendWeek).
 export const WEEKDAY_SCHEDULE = {
-  0: 'rest',
+  0: 'weekend',
   1: 'gym',
   2: 'outdoor',
   3: 'gym',
   4: 'outdoor',
   5: 'gym',
-  6: 'rest',
+  6: 'weekend',
 };
 
 function stripTime(date) {
@@ -24,8 +25,30 @@ function diffDays(date, startDate) {
   return Math.max(0, Math.floor(ms / 86400000));
 }
 
-export function getSessionTypeForDate(date) {
-  return WEEKDAY_SCHEDULE[date.getDay()];
+function mondayOf(date) {
+  const day = date.getDay();
+  const diffToMonday = day === 0 ? -6 : 1 - day;
+  const monday = new Date(date);
+  monday.setDate(date.getDate() + diffToMonday);
+  return monday;
+}
+
+// Weekend parity is anchored to the real calendar Monday, not the rolling
+// weekIndex used for gym A/B — this guarantees Saturday and the following
+// Sunday of the same real weekend always get the same parity.
+export function isFreeWeekendWeek(date, startDate) {
+  const weeksSince = Math.round((stripTime(mondayOf(date)) - stripTime(mondayOf(startDate))) / (7 * 86400000));
+  return weeksSince % 2 === 0;
+}
+
+export function getExpectedSessionsForWeek(date, startDate) {
+  return isFreeWeekendWeek(date, startDate) ? 6 : 5;
+}
+
+export function getSessionTypeForDate(date, startDate) {
+  const base = WEEKDAY_SCHEDULE[date.getDay()];
+  if (base !== 'weekend') return base;
+  return isFreeWeekendWeek(date, startDate) ? 'recovery' : 'rest';
 }
 
 export function getGymLetterForDate(date, startDate) {

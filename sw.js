@@ -11,6 +11,7 @@ const APP_SHELL = [
   './js/data/exercises.js',
   './js/data/workouts.js',
   './js/data/outdoor.js',
+  './js/data/recovery.js',
   './js/data/mealPlan.js',
   './js/data/poses.js',
   './js/features/today.js',

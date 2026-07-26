@@ -1,5 +1,5 @@
 import { getAll, put, get } from '../db.js';
-import { getProgramStatus, WEEKDAY_SCHEDULE } from '../data/program.js';
+import { getProgramStatus, getExpectedSessionsForWeek } from '../data/program.js';
 
 function isoDate(d = new Date()) {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
@@ -14,16 +14,17 @@ function startOfWeekDate(date) {
   return monday;
 }
 
-async function getWeekCompletion() {
+async function getWeekCompletion(startDate) {
   const rows = await getAll('sessionLog');
-  const weekStart = isoDate(startOfWeekDate(new Date()));
-  const expected = Object.values(WEEKDAY_SCHEDULE).filter((t) => t !== 'rest').length;
+  const today = new Date();
+  const weekStart = isoDate(startOfWeekDate(today));
+  const expected = getExpectedSessionsForWeek(today, startDate);
   const doneThisWeek = rows.filter((r) => r.date >= weekStart && r.completed).length;
-  const streak = getWeekStreak(rows, expected);
+  const streak = getWeekStreak(rows, startDate, today);
   return { doneThisWeek, expected, streak };
 }
 
-function getWeekStreak(rows, expected, today = new Date()) {
+function getWeekStreak(rows, startDate, today = new Date()) {
   const completedDates = new Set(rows.filter((r) => r.completed).map((r) => r.date));
   let streak = 0;
   const weekStart = startOfWeekDate(today);
@@ -35,7 +36,8 @@ function getWeekStreak(rows, expected, today = new Date()) {
       day.setDate(weekStart.getDate() + d);
       if (completedDates.has(isoDate(day))) count += 1;
     }
-    if (count < expected) break;
+    const expectedThisWeek = getExpectedSessionsForWeek(weekStart, startDate);
+    if (count < expectedThisWeek) break;
     streak += 1;
     weekStart.setDate(weekStart.getDate() - 7);
   }
@@ -60,7 +62,7 @@ export async function renderProgressScreen(container) {
   const programRow = await get('program', 'main');
   const start = programRow ? new Date(programRow.startDate + 'T00:00:00') : new Date();
   const status = getProgramStatus(new Date(), start);
-  const { doneThisWeek, expected, streak } = await getWeekCompletion();
+  const { doneThisWeek, expected, streak } = await getWeekCompletion(start);
   const weightRows = (await getAll('weightLog')).sort((a, b) => a.date.localeCompare(b.date));
 
   container.innerHTML = `

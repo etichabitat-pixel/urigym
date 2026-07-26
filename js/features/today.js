@@ -3,11 +3,13 @@ import { getSessionTypeForDate, getGymLetterForDate, getProgramStatus } from '..
 import { WORKOUTS, getSetsForPhase, GYM_WARMUP, COOLDOWN_STRETCH } from '../data/workouts.js';
 import { getExerciseById } from '../data/exercises.js';
 import { OUTDOOR_OPTIONS, getOutdoorOptionById } from '../data/outdoor.js';
+import { RECOVERY_OPTIONS, getRecoveryOptionById } from '../data/recovery.js';
 import { renderPoseSvg } from '../data/poses.js';
 
 const state = {
   variant: 'gym',
   outdoorOptionId: null,
+  recoveryOptionId: null,
   expandedId: null,
   checked: new Set(),
 };
@@ -148,10 +150,27 @@ function restDayHtml() {
   return `<h2>Avui és dia de descans</h2><p>Aprofita per recuperar. Demà toca sessió.</p>`;
 }
 
+function recoveryDayHtml(alreadyDone) {
+  const opt = state.recoveryOptionId ? getRecoveryOptionById(state.recoveryOptionId) : null;
+  return `
+    <h2>Avui: cap de setmana lliure — recuperació activa</h2>
+    <p>Sense nens aquest cap de setmana. Tria una màquina de cardio suau al gimnàs:</p>
+    <div class="segmented">
+      ${RECOVERY_OPTIONS.map((o) => `<button data-recovery="${o.id}" class="${state.recoveryOptionId === o.id ? 'selected' : ''}">${o.name}</button>`).join('')}
+    </div>
+    ${opt ? `
+      <div class="card">
+        <p><strong>Durada:</strong> ${opt.duration} — ${opt.intensity}</p>
+      </div>
+      <button class="primary" id="mark-done" ${alreadyDone ? 'disabled' : ''}>${alreadyDone ? 'Sessió feta ✓' : 'Marcar sessió com a feta'}</button>
+    ` : '<p>Tria una opció.</p>'}
+  `;
+}
+
 export async function renderTodayScreen(container) {
   const start = await getOrCreateProgramStart();
   const today = new Date();
-  const sessionType = getSessionTypeForDate(today);
+  const sessionType = getSessionTypeForDate(today, start);
   const status = getProgramStatus(today, start);
   const alreadyDone = await isTodayLogged();
   const sessionLogRows = await getAll('sessionLog');
@@ -163,6 +182,8 @@ export async function renderTodayScreen(container) {
   } else if (sessionType === 'gym') {
     const letter = getGymLetterForDate(today, start);
     body = gymDayHtml(letter, status, alreadyDone);
+  } else if (sessionType === 'recovery') {
+    body = recoveryDayHtml(alreadyDone);
   } else {
     body = outdoorDayHtml(alreadyDone);
   }
@@ -184,6 +205,12 @@ function attachTodayListeners(container, sessionType) {
       renderTodayScreen(container);
     });
   });
+  container.querySelectorAll('[data-recovery]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      state.recoveryOptionId = btn.dataset.recovery;
+      renderTodayScreen(container);
+    });
+  });
   container.querySelectorAll('[data-expand-id]').forEach((el) => {
     el.addEventListener('click', () => {
       state.expandedId = state.expandedId === el.dataset.expandId ? null : el.dataset.expandId;
@@ -201,6 +228,8 @@ function attachTodayListeners(container, sessionType) {
     markBtn.addEventListener('click', async () => {
       if (sessionType === 'gym') {
         await markTodayDone({ type: 'gym', variant: state.variant });
+      } else if (sessionType === 'recovery') {
+        await markTodayDone({ type: 'recovery', variant: state.recoveryOptionId });
       } else {
         await markTodayDone({ type: 'outdoor', variant: state.outdoorOptionId });
       }

@@ -5,7 +5,7 @@ export const EXERCISES = [
     muscleGroup: 'Cames/Glutis',
     sessionOf: 'A',
     pose: 'bent',
-    videoUrl: 'https://www.youtube.com/watch?v=8Kls95w2jFA',
+    videoUrl: 'https://www.youtube.com/watch?v=BjixzWEw4EY',
     cues: [
       "Peus a l'amplada de les espatlles, punteres lleugerament cap enfora",
       "Baixa portant els malucs enrere i avall, com si t'asseguessis en una cadira",
@@ -27,7 +27,7 @@ export const EXERCISES = [
     muscleGroup: 'Pit/Tríceps',
     sessionOf: 'A',
     pose: 'pushPosition',
-    videoUrl: 'https://www.youtube.com/watch?v=tddo0Th2WZU',
+    videoUrl: 'https://www.youtube.com/watch?v=7aQY3u0Dk-Q',
     cues: [
       "Estirat al banc, omòplats enrere i avall, pit amunt",
       "Peus ben plantats a terra per estabilitat",
@@ -49,7 +49,7 @@ export const EXERCISES = [
     muscleGroup: 'Esquena/Bíceps',
     sessionOf: 'A',
     pose: 'pullPosition',
-    videoUrl: 'https://www.youtube.com/watch?v=rnnZr62A94s',
+    videoUrl: 'https://www.youtube.com/watch?v=nwdptbhYjTw',
     cues: [
       'Assegut, genolls lleugerament flexionats, esquena recta',
       "Estira els braços cap endavant sense arrodonir l'esquena",
@@ -71,7 +71,7 @@ export const EXERCISES = [
     muscleGroup: 'Espatlles',
     sessionOf: 'A',
     pose: 'overhead',
-    videoUrl: 'https://www.youtube.com/watch?v=_RlRDWO2jfg',
+    videoUrl: 'https://www.youtube.com/watch?v=o5M9RZ-vWrc',
     cues: [
       'Peus a l\'amplada de malucs, core actiu',
       'Mancuernes a l\'alçada de les espatlles, colzes davant',
@@ -93,7 +93,7 @@ export const EXERCISES = [
     muscleGroup: 'Glutis/Isquiotibials',
     sessionOf: 'A',
     pose: 'bent',
-    videoUrl: 'https://www.youtube.com/watch?v=hCm-70-9_XE',
+    videoUrl: 'https://www.youtube.com/watch?v=3aTb9Megbuo',
     cues: [
       'Esquena alta recolzada a un banc, peus plans a terra a l\'amplada de malucs',
       'Baixa els malucs cap a terra de manera controlada',
@@ -115,7 +115,7 @@ export const EXERCISES = [
     muscleGroup: 'Core',
     sessionOf: 'A',
     pose: 'plankPosition',
-    videoUrl: 'https://www.youtube.com/watch?v=-fhNcdQstTk',
+    videoUrl: 'https://www.youtube.com/watch?v=zfY5XXa26ug',
     cues: [
       'Avantbraços a terra, colzes sota les espatlles',
       'Cos en línia recta del cap als talons',
@@ -137,7 +137,7 @@ export const EXERCISES = [
     muscleGroup: 'Cadena posterior',
     sessionOf: 'B',
     pose: 'bent',
-    videoUrl: 'https://www.youtube.com/watch?v=Vjd5pEyj9-E',
+    videoUrl: 'https://www.youtube.com/watch?v=1IdDV6QbXas',
     cues: [
       "Peus a l'amplada de malucs, pes a prop de les canyelles",
       "Malucs enrere mantenint l'esquena recta (no arrodonida)",
@@ -184,7 +184,7 @@ export const EXERCISES = [
     muscleGroup: 'Pit superior/Espatlles',
     sessionOf: 'B',
     pose: 'pushPosition',
-    videoUrl: 'https://www.youtube.com/watch?v=CTB_Jb_UvII',
+    videoUrl: 'https://www.youtube.com/watch?v=MkMf308jXww',
     cues: [
       "Banc a 30-45°, peus ben plantats a terra",
       "Mancuernes a l'alçada del pit superior, colzes ~45° del cos",
@@ -206,7 +206,7 @@ export const EXERCISES = [
     muscleGroup: 'Cames/Glutis',
     sessionOf: 'B',
     pose: 'bent',
-    videoUrl: 'https://www.youtube.com/watch?v=94AXT7D3bKY',
+    videoUrl: 'https://www.youtube.com/watch?v=R0d2xsmKq2E',
     cues: [
       'Peus junts, fes una passa enrere amb una cama',
       "Baixa fins que ambdós genolls formin ~90°",
@@ -228,7 +228,7 @@ export const EXERCISES = [
     muscleGroup: 'Espatlles',
     sessionOf: 'B',
     pose: 'armsOut',
-    videoUrl: 'https://www.youtube.com/watch?v=n5dsI9qQXwY',
+    videoUrl: 'https://www.youtube.com/watch?v=b6KtNTSHA54',
     cues: [
       'Mancuernes als costats, lleuger flexió de colzes',
       "Eleva els braços cap als costats fins l'alçada de les espatlles",
@@ -250,7 +250,7 @@ export const EXERCISES = [
     muscleGroup: 'Espatlla posterior',
     sessionOf: 'B',
     pose: 'pullPosition',
-    videoUrl: 'https://www.youtube.com/watch?v=cc0tasCalHg',
+    videoUrl: 'https://www.youtube.com/watch?v=X-xCQ1gh-kA',
     cues: [
       "Corda o banda a l'alçada de la cara",
       'Estira portant les mans cap a la cara, colzes alts',
@@ -272,7 +272,7 @@ export const EXERCISES = [
     muscleGroup: 'Core',
     sessionOf: 'B',
     pose: 'plankPosition',
-    videoUrl: 'https://www.youtube.com/watch?v=HdxDWtHwFmM',
+    videoUrl: 'https://www.youtube.com/watch?v=0JFVLaTLzHg',
     cues: [
       "Estirat de esquena, braços amunt i genolls flexionats a 90°",
       'Prem la zona lumbar contra el terra durant tot l\'exercici',
@@ -294,7 +294,7 @@ export const EXERCISES = [
     muscleGroup: 'Core/Agafament',
     sessionOf: 'B',
     pose: 'standing',
-    videoUrl: 'https://www.youtube.com/watch?v=z7E_YU9P1jU',
+    videoUrl: 'https://www.youtube.com/watch?v=pn_hNld6Knc',
     cues: [
       'Un pes a cada mà, pit amunt, espatlles enrere',
       'Camina a passos curts i controlats',
