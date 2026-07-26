@@ -1,0 +1,90 @@
+import { getAll, put, get } from '../db.js';
+import { getProgramStatus, WEEKDAY_SCHEDULE } from '../data/program.js';
+
+function isoDate(d = new Date()) {
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+}
+
+function startOfWeekDate(date) {
+  const day = date.getDay();
+  const diffToMonday = day === 0 ? -6 : 1 - day;
+  const monday = new Date(date);
+  monday.setDate(date.getDate() + diffToMonday);
+  monday.setHours(0, 0, 0, 0);
+  return monday;
+}
+
+async function getWeekCompletion() {
+  const rows = await getAll('sessionLog');
+  const weekStart = isoDate(startOfWeekDate(new Date()));
+  const expected = Object.values(WEEKDAY_SCHEDULE).filter((t) => t !== 'rest').length;
+  const doneThisWeek = rows.filter((r) => r.date >= weekStart && r.completed).length;
+  const streak = getWeekStreak(rows, expected);
+  return { doneThisWeek, expected, streak };
+}
+
+function getWeekStreak(rows, expected, today = new Date()) {
+  const completedDates = new Set(rows.filter((r) => r.completed).map((r) => r.date));
+  let streak = 0;
+  const weekStart = startOfWeekDate(today);
+  weekStart.setDate(weekStart.getDate() - 7); // start from the most recent FULLY elapsed week, not the in-progress one
+  for (let i = 0; i < 52; i++) {
+    let count = 0;
+    for (let d = 0; d < 7; d++) {
+      const day = new Date(weekStart);
+      day.setDate(weekStart.getDate() + d);
+      if (completedDates.has(isoDate(day))) count += 1;
+    }
+    if (count < expected) break;
+    streak += 1;
+    weekStart.setDate(weekStart.getDate() - 7);
+  }
+  return streak;
+}
+
+function weightSparkline(entries) {
+  if (entries.length < 2) return '<p>Afegeix almenys 2 pesades per veure la gràfica.</p>';
+  const weights = entries.map((e) => e.weight);
+  const min = Math.min(...weights);
+  const max = Math.max(...weights);
+  const range = max - min || 1;
+  const points = entries.map((e, i) => {
+    const x = (i / (entries.length - 1)) * 280 + 10;
+    const y = 90 - ((e.weight - min) / range) * 80;
+    return `${x},${y}`;
+  }).join(' ');
+  return `<svg viewBox="0 0 300 100" width="100%"><polyline points="${points}" fill="none" stroke="#1a5fa8" stroke-width="3"/></svg>`;
+}
+
+export async function renderProgressScreen(container) {
+  const programRow = await get('program', 'main');
+  const start = programRow ? new Date(programRow.startDate + 'T00:00:00') : new Date();
+  const status = getProgramStatus(new Date(), start);
+  const { doneThisWeek, expected, streak } = await getWeekCompletion();
+  const weightRows = (await getAll('weightLog')).sort((a, b) => a.date.localeCompare(b.date));
+
+  container.innerHTML = `
+    <h2>Progrés</h2>
+    <div class="card">
+      <p><strong>Fase actual:</strong> ${status.phase} (setmana ${status.week} de 12)</p>
+      <p><strong>Aquesta setmana:</strong> ${doneThisWeek} de ${expected} sessions fetes</p>
+      <p><strong>Ratxa:</strong> ${streak} ${streak === 1 ? 'setmana completa seguida' : 'setmanes completes seguides'}</p>
+    </div>
+    <div class="card">
+      <h3>Pes corporal</h3>
+      ${weightSparkline(weightRows)}
+      <div style="display:flex; gap:8px; margin-top:8px;">
+        <input type="number" step="0.1" id="weight-input" placeholder="kg" style="flex:1; padding:8px; border-radius:8px; border:1px solid #ccc;">
+        <button class="secondary" id="add-weight">Afegir</button>
+      </div>
+    </div>
+  `;
+
+  container.querySelector('#add-weight').addEventListener('click', async () => {
+    const input = container.querySelector('#weight-input');
+    const weight = parseFloat(input.value);
+    if (!weight || weight <= 0) return;
+    await put('weightLog', { date: isoDate(), weight });
+    renderProgressScreen(container);
+  });
+}
