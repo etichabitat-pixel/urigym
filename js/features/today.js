@@ -2,12 +2,17 @@ import { get, getAll, put } from '../db.js';
 import { getSessionTypeForDate, getGymLetterForDate, getProgramStatus } from '../data/program.js';
 import { WORKOUTS, getSetsForPhase, GYM_WARMUP, COOLDOWN_STRETCH } from '../data/workouts.js';
 import { getExerciseById } from '../data/exercises.js';
-import { OUTDOOR_OPTIONS, getOutdoorOptionById } from '../data/outdoor.js';
-import { RECOVERY_OPTIONS, getRecoveryOptionById } from '../data/recovery.js';
+import { OUTDOOR_OPTIONS } from '../data/outdoor.js';
+import { RECOVERY_OPTIONS } from '../data/recovery.js';
 import { renderExerciseVisual } from './exerciseVisual.js';
 
+// `category` is chosen manually and independent from what the fixed weekly
+// schedule says today "should" be — that schedule only picks the initial
+// default. This lets Oriol browse or log Gimnàs/Casa/Aire lliure/Recuperació
+// on any day, and log what he actually did.
 const state = {
-  variant: 'gym',
+  category: null, // 'gym' | 'casa' | 'outdoor' | 'recovery'
+  casaVariant: 'casaCurt',
   outdoorOptionId: null,
   recoveryOptionId: null,
   expandedId: null,
@@ -37,6 +42,13 @@ async function markTodayDone(extra) {
   state.checked = new Set();
 }
 
+function defaultCategoryFor(sessionType) {
+  if (sessionType === 'gym') return 'gym';
+  if (sessionType === 'outdoor') return 'outdoor';
+  if (sessionType === 'recovery') return 'recovery';
+  return 'gym'; // rest day: still let him browse, starting on Gimnàs
+}
+
 function daysSinceLastSession(rows, today = new Date()) {
   const completedDates = rows.filter((r) => r.completed).map((r) => r.date);
   if (completedDates.length === 0) return null;
@@ -56,10 +68,24 @@ function motivationalBanner(daysSince) {
   `;
 }
 
-async function exerciseRow(item, phase) {
+function categorySelector() {
+  const options = [
+    { id: 'gym', label: 'Gimnàs' },
+    { id: 'casa', label: 'Casa' },
+    { id: 'outdoor', label: "Aire lliure" },
+    { id: 'recovery', label: 'Recuperació' },
+  ];
+  return `
+    <div class="segmented" style="flex-wrap: wrap; gap: 6px;">
+      ${options.map((o) => `<button data-category="${o.id}" class="${state.category === o.id ? 'selected' : ''}" style="flex: 1 1 45%;">${o.label}</button>`).join('')}
+    </div>
+  `;
+}
+
+async function exerciseRow(item, phase, variant) {
   const ex = getExerciseById(item.exerciseId);
   const sets = getSetsForPhase(item.baseSets, phase);
-  const display = state.variant === 'casaCurt' ? ex.homeShort : state.variant === 'casaComplet' ? ex.homeFull : null;
+  const display = variant === 'casaCurt' ? ex.homeShort : variant === 'casaComplet' ? ex.homeFull : null;
   const label = display ? `${ex.name} → ${display.name}` : ex.name;
   const checked = state.checked.has(ex.id);
   const expanded = state.expandedId === ex.id;
@@ -113,16 +139,12 @@ function cooldownSection() {
   `;
 }
 
-async function gymDayHtml(letter, status, alreadyDone) {
-  const template = WORKOUTS[letter][state.variant];
-  const rows = await Promise.all(template.map((item) => exerciseRow(item, status.phase)));
+async function strengthSessionHtml(letter, status, alreadyDone, variant, extraToggle) {
+  const template = WORKOUTS[letter][variant];
+  const rows = await Promise.all(template.map((item) => exerciseRow(item, status.phase, variant)));
   return `
-    <h2>Avui: Sessió ${letter} — ${status.phase} (setmana ${status.week})</h2>
-    <div class="segmented">
-      <button data-variant="gym" class="${state.variant === 'gym' ? 'selected' : ''}">Gimnàs</button>
-      <button data-variant="casaCurt" class="${state.variant === 'casaCurt' ? 'selected' : ''}">Casa curt</button>
-      <button data-variant="casaComplet" class="${state.variant === 'casaComplet' ? 'selected' : ''}">Casa complet</button>
-    </div>
+    <h2>Sessió ${letter} — ${status.phase} (setmana ${status.week})</h2>
+    ${extraToggle}
     ${warmupSection()}
     <div class="card">
       <h3>Exercicis</h3>
@@ -133,43 +155,48 @@ async function gymDayHtml(letter, status, alreadyDone) {
   `;
 }
 
-function outdoorDayHtml(alreadyDone) {
-  const opt = state.outdoorOptionId ? getOutdoorOptionById(state.outdoorOptionId) : null;
+function casaVariantToggle() {
   return `
-    <h2>Avui: dia a l'aire lliure</h2>
     <div class="segmented">
-      ${OUTDOOR_OPTIONS.map((o) => `<button data-outdoor="${o.id}" class="${state.outdoorOptionId === o.id ? 'selected' : ''}">${o.name}</button>`).join('')}
+      <button data-casa-variant="casaCurt" class="${state.casaVariant === 'casaCurt' ? 'selected' : ''}">Curt (dia de nens)</button>
+      <button data-casa-variant="casaComplet" class="${state.casaVariant === 'casaComplet' ? 'selected' : ''}">Complet (vacances)</button>
     </div>
-    ${opt ? `
-      <div class="card">
-        <p><strong>Durada:</strong> ${opt.duration} — ${opt.intensity}</p>
-        <p><strong>Escalfament:</strong> ${opt.warmup}</p>
-        ${opt.circuit ? `<ul>${opt.circuit.map((c) => `<li>${c.exercise} — ${c.sets}×${c.reps}</li>`).join('')}</ul>` : ''}
-        ${opt.cooldown ? `<p><strong>Cooldown:</strong> ${opt.cooldown}</p>` : ''}
-      </div>
-      <button class="primary" id="mark-done" ${alreadyDone ? 'disabled' : ''}>${alreadyDone ? 'Sessió feta ✓' : 'Marcar sessió com a feta'}</button>
-    ` : '<p>Tria una opció.</p>'}
   `;
 }
 
-function restDayHtml() {
-  return `<h2>Avui és dia de descans</h2><p>Aprofita per recuperar. Demà toca sessió.</p>`;
+function optionCard(o, selected, nameAttr, dataAttr) {
+  return `
+    <div class="card">
+      <div class="checkbox-row" style="border-bottom:none; padding-bottom:0;">
+        <input type="radio" name="${nameAttr}" data-${dataAttr}="${o.id}" ${selected ? 'checked' : ''}>
+        <div style="flex:1">
+          <strong>${o.name}</strong><br>
+          <span style="color:var(--color-text-muted); font-size:13px;">${o.duration} — ${o.intensity}</span>
+        </div>
+      </div>
+      ${selected && (o.warmup || o.circuit || o.cooldown) ? `
+        ${o.warmup ? `<p style="margin-top:10px;"><strong>Escalfament:</strong> ${o.warmup}</p>` : ''}
+        ${o.circuit ? `<ul>${o.circuit.map((c) => `<li>${c.exercise} — ${c.sets}×${c.reps}</li>`).join('')}</ul>` : ''}
+        ${o.cooldown ? `<p><strong>Cooldown:</strong> ${o.cooldown}</p>` : ''}
+      ` : ''}
+    </div>
+  `;
 }
 
-function recoveryDayHtml(alreadyDone) {
-  const opt = state.recoveryOptionId ? getRecoveryOptionById(state.recoveryOptionId) : null;
+function outdoorHtml(alreadyDone) {
   return `
-    <h2>Avui: cap de setmana lliure — recuperació activa</h2>
-    <p>Sense nens aquest cap de setmana. Tria una màquina de cardio suau al gimnàs:</p>
-    <div class="segmented">
-      ${RECOVERY_OPTIONS.map((o) => `<button data-recovery="${o.id}" class="${state.recoveryOptionId === o.id ? 'selected' : ''}">${o.name}</button>`).join('')}
-    </div>
-    ${opt ? `
-      <div class="card">
-        <p><strong>Durada:</strong> ${opt.duration} — ${opt.intensity}</p>
-      </div>
-      <button class="primary" id="mark-done" ${alreadyDone ? 'disabled' : ''}>${alreadyDone ? 'Sessió feta ✓' : 'Marcar sessió com a feta'}</button>
-    ` : '<p>Tria una opció.</p>'}
+    <h2>Aire lliure</h2>
+    ${OUTDOOR_OPTIONS.map((o) => optionCard(o, state.outdoorOptionId === o.id, 'outdoor', 'outdoor')).join('')}
+    <button class="primary" id="mark-done" ${!state.outdoorOptionId || alreadyDone ? 'disabled' : ''}>${alreadyDone ? 'Sessió feta ✓' : 'Marcar sessió com a feta'}</button>
+  `;
+}
+
+function recoveryHtml(alreadyDone) {
+  return `
+    <h2>Recuperació activa</h2>
+    <p>Màquina de cardio suau al gimnàs — ideal per caps de setmana lliures o dies extra.</p>
+    ${RECOVERY_OPTIONS.map((o) => optionCard(o, state.recoveryOptionId === o.id, 'recovery', 'recovery')).join('')}
+    <button class="primary" id="mark-done" ${!state.recoveryOptionId || alreadyDone ? 'disabled' : ''}>${alreadyDone ? 'Sessió feta ✓' : 'Marcar sessió com a feta'}</button>
   `;
 }
 
@@ -182,38 +209,51 @@ export async function renderTodayScreen(container) {
   const sessionLogRows = await getAll('sessionLog');
   const banner = motivationalBanner(daysSinceLastSession(sessionLogRows, today));
 
-  let body;
-  if (sessionType === 'rest') {
-    body = restDayHtml();
-  } else if (sessionType === 'gym') {
-    const letter = getGymLetterForDate(today, start);
-    body = await gymDayHtml(letter, status, alreadyDone);
-  } else if (sessionType === 'recovery') {
-    body = recoveryDayHtml(alreadyDone);
-  } else {
-    body = outdoorDayHtml(alreadyDone);
+  if (state.category === null) {
+    state.category = defaultCategoryFor(sessionType);
   }
 
-  container.innerHTML = banner + body;
-  attachTodayListeners(container, sessionType);
+  // On days the fixed schedule wouldn't naturally assign a gym letter (e.g.
+  // browsing "Gimnàs" manually on a Tuesday), default to A.
+  const letter = getGymLetterForDate(today, start) ?? 'A';
+
+  let body;
+  if (state.category === 'gym') {
+    body = await strengthSessionHtml(letter, status, alreadyDone, 'gym', '');
+  } else if (state.category === 'casa') {
+    body = await strengthSessionHtml(letter, status, alreadyDone, state.casaVariant, casaVariantToggle());
+  } else if (state.category === 'outdoor') {
+    body = outdoorHtml(alreadyDone);
+  } else {
+    body = recoveryHtml(alreadyDone);
+  }
+
+  container.innerHTML = `${banner}${categorySelector()}${body}`;
+  attachTodayListeners(container);
 }
 
-function attachTodayListeners(container, sessionType) {
-  container.querySelectorAll('[data-variant]').forEach((btn) => {
+function attachTodayListeners(container) {
+  container.querySelectorAll('[data-category]').forEach((btn) => {
     btn.addEventListener('click', () => {
-      state.variant = btn.dataset.variant;
+      state.category = btn.dataset.category;
       renderTodayScreen(container);
     });
   });
-  container.querySelectorAll('[data-outdoor]').forEach((btn) => {
+  container.querySelectorAll('[data-casa-variant]').forEach((btn) => {
     btn.addEventListener('click', () => {
-      state.outdoorOptionId = btn.dataset.outdoor;
+      state.casaVariant = btn.dataset.casaVariant;
       renderTodayScreen(container);
     });
   });
-  container.querySelectorAll('[data-recovery]').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      state.recoveryOptionId = btn.dataset.recovery;
+  container.querySelectorAll('[data-outdoor]').forEach((el) => {
+    el.addEventListener('change', () => {
+      state.outdoorOptionId = el.dataset.outdoor;
+      renderTodayScreen(container);
+    });
+  });
+  container.querySelectorAll('[data-recovery]').forEach((el) => {
+    el.addEventListener('change', () => {
+      state.recoveryOptionId = el.dataset.recovery;
       renderTodayScreen(container);
     });
   });
@@ -239,12 +279,14 @@ function attachTodayListeners(container, sessionType) {
   const markBtn = container.querySelector('#mark-done');
   if (markBtn) {
     markBtn.addEventListener('click', async () => {
-      if (sessionType === 'gym') {
-        await markTodayDone({ type: 'gym', variant: state.variant });
-      } else if (sessionType === 'recovery') {
-        await markTodayDone({ type: 'recovery', variant: state.recoveryOptionId });
-      } else {
+      if (state.category === 'gym') {
+        await markTodayDone({ type: 'gym', variant: 'gym' });
+      } else if (state.category === 'casa') {
+        await markTodayDone({ type: 'gym', variant: state.casaVariant });
+      } else if (state.category === 'outdoor') {
         await markTodayDone({ type: 'outdoor', variant: state.outdoorOptionId });
+      } else {
+        await markTodayDone({ type: 'recovery', variant: state.recoveryOptionId });
       }
       renderTodayScreen(container);
     });
