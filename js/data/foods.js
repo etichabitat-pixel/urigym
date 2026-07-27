@@ -158,6 +158,25 @@ export const MEAL_TEMPLATES = [
   },
 ];
 
+export const COOKING_TIPS = [
+  {
+    title: 'Cuina per lots (batch cooking)',
+    text: 'Cuina 2-3 racions de llegums, arròs o cereal integral d\'un cop i reparteix-les en envasos individuals a la nevera (3-4 dies) o congelador (fins a 3 mesos). Estalvia temps entre setmana sense dependre de plats preparats.',
+  },
+  {
+    title: 'Remull intel·ligent dels llegums',
+    text: 'Deixa els llegums secs en remull 8-12h (amb un raig de vinagre o suc de llimona a l\'aigua) abans de coure\'ls. Redueix el temps de cocció, millora la digestió i redueix la flatulència.',
+  },
+  {
+    title: 'Congelar bé',
+    text: 'Reparteix el menjar cuinat en bosses o envasos plans (no alts) abans de congelar: es descongelen més ràpid i uniformement. Etiqueta amb la data — prioritza consumir en 2-3 mesos.',
+  },
+  {
+    title: 'Verdura sempre a mà',
+    text: 'Renta i talla la verdura just en comprar-la (amanida, carbassó, pebrot) i guarda-la en un envàs a la nevera. Tenir-la ja preparada fa molt més fàcil afegir-ne a qualsevol àpat.',
+  },
+];
+
 export function getFoodGroupById(id) {
   return FOOD_GROUPS.find((g) => g.id === id) ?? null;
 }

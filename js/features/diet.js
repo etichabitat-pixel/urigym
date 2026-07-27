@@ -1,6 +1,6 @@
 import { getMealsForDay } from '../data/mealPlan.js';
 import { calculateTargets, DEFAULT_PROFILE } from '../data/profile.js';
-import { FOOD_GROUPS, MEAL_TEMPLATES } from '../data/foods.js';
+import { FOOD_GROUPS, MEAL_TEMPLATES, COOKING_TIPS } from '../data/foods.js';
 import { get } from '../db.js';
 import { renderShoppingList } from './shoppingList.js';
 
@@ -63,6 +63,19 @@ function templatesSection() {
   `;
 }
 
+function cookingTipsSection() {
+  return `
+    <div class="card">
+      <h3>Trucs de cuina eficient</h3>
+      ${COOKING_TIPS.map((t) => `
+        <p style="margin-bottom:14px;">
+          <strong>${t.title}:</strong> ${t.text}
+        </p>
+      `).join('')}
+    </div>
+  `;
+}
+
 function foodGroupCard(group) {
   const expanded = state.expandedGroup === group.id;
   return `
@@ -96,6 +109,7 @@ function foodGroupCard(group) {
 function foodsView() {
   return `
     ${templatesSection()}
+    ${cookingTipsSection()}
     <h3 style="margin: 16px 0 4px;">Base de dades d'aliments (toca una categoria)</h3>
     ${FOOD_GROUPS.map(foodGroupCard).join('')}
   `;
