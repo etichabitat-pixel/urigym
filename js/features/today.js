@@ -149,11 +149,20 @@ async function renderExerciseDetail(ex, homeInfo) {
   `;
 }
 
+const WARMUP_ICONS = ['recovery', 'cames', 'gym'];
+
 function warmupSection() {
   return `
     <div class="card">
       <h3>Escalfament</h3>
-      ${GYM_WARMUP.map((w) => `<p><strong>${w.phase}</strong> (${w.duration}): ${w.description}</p>`).join('')}
+      ${GYM_WARMUP.map((w, i) => `
+        <div style="display:flex; gap:10px; align-items:flex-start; margin-bottom:${i < GYM_WARMUP.length - 1 ? '14px' : '0'};">
+          <div style="width:36px; height:36px; flex-shrink:0; background:var(--color-surface-2); border-radius:8px; display:flex; align-items:center; justify-content:center; color:var(--color-primary);">
+            ${icon(WARMUP_ICONS[i] ?? 'check', 20)}
+          </div>
+          <p style="margin:0;"><strong>${w.phase}</strong> (${w.duration}): ${w.description}</p>
+        </div>
+      `).join('')}
     </div>
   `;
 }
