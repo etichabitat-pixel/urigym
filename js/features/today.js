@@ -51,6 +51,10 @@ async function markTodayDone(extra) {
   state.checked = new Set();
 }
 
+export function presetCategory(category) {
+  state.category = category;
+}
+
 function defaultCategoryFor(sessionType) {
   if (sessionType === 'gym') return 'gym';
   if (sessionType === 'outdoor') return 'outdoor';

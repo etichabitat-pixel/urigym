@@ -17,6 +17,7 @@ const APP_SHELL = [
   './js/data/foods.js',
   './js/data/poses.js',
   './js/features/today.js',
+  './js/features/start.js',
   './js/features/exerciseVisual.js',
   './js/features/diet.js',
   './js/features/shoppingList.js',
