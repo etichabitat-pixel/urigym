@@ -1,5 +1,6 @@
 import { getAll, put, get } from '../db.js';
 import { getProgramStatus, getExpectedSessionsForWeek } from '../data/program.js';
+import { icon } from '../data/icons.js';
 
 function isoDate(d = new Date()) {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
@@ -70,15 +71,16 @@ export async function renderProgressScreen(container) {
   const { doneThisWeek, expected, streak } = await getWeekCompletion(start);
   const weightRows = (await getAll('weightLog')).sort((a, b) => a.date.localeCompare(b.date));
 
+  const goalMet = doneThisWeek >= expected;
   container.innerHTML = `
     <h2>Progrés</h2>
     <div class="stat-row">
       <div class="card">
-        <div class="stat-number">${doneThisWeek}/${expected}</div>
+        <div class="stat-number" style="display:flex; align-items:center; justify-content:center; gap:6px;">${goalMet ? icon('target', 22) : ''}${doneThisWeek}/${expected}</div>
         <div class="stat-label">Sessions aquesta setmana</div>
       </div>
       <div class="card">
-        <div class="stat-number">${streak}</div>
+        <div class="stat-number" style="display:flex; align-items:center; justify-content:center; gap:6px;">${streak > 0 ? icon('flame', 22) : ''}${streak}</div>
         <div class="stat-label">${streak === 1 ? 'Setmana completa seguida' : 'Setmanes completes seguides'}</div>
       </div>
     </div>
@@ -93,7 +95,7 @@ export async function renderProgressScreen(container) {
       ${weightSparkline(weightRows)}
       <div style="display:flex; gap:8px; margin-top:12px;">
         <input type="number" step="0.1" id="weight-input" placeholder="kg" style="flex:1;">
-        <button class="secondary" id="add-weight">Afegir</button>
+        <button class="secondary" id="add-weight" style="display:flex; align-items:center; gap:6px;">${icon('plus', 16)}Afegir</button>
       </div>
     </div>
   `;

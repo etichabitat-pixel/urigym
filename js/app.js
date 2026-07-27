@@ -4,6 +4,7 @@ import { renderExerciseLibraryScreen } from './features/exerciseLibrary.js';
 import { renderProgressScreen } from './features/progress.js';
 import { showBackupPanel } from './features/backup.js';
 import { seedProfileIfMissing } from './data/profile.js';
+import { icon } from './data/icons.js';
 
 const RENDERERS = {
   today: renderTodayScreen,
@@ -30,6 +31,9 @@ async function setActiveTab(tab) {
 
 async function init() {
   registerServiceWorker();
+  document.querySelectorAll('[data-icon]').forEach((el) => {
+    el.innerHTML = icon(el.dataset.icon, 20);
+  });
   await seedProfileIfMissing();
   document.querySelectorAll('.tab-btn[data-tab]').forEach((btn) => {
     btn.addEventListener('click', () => setActiveTab(btn.dataset.tab));

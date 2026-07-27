@@ -3,12 +3,18 @@ import { calculateTargets, DEFAULT_PROFILE } from '../data/profile.js';
 import { FOOD_GROUPS, MEAL_TEMPLATES, COOKING_TIPS } from '../data/foods.js';
 import { get } from '../db.js';
 import { renderShoppingList } from './shoppingList.js';
+import { icon } from '../data/icons.js';
 
 const state = {
   chosen: { breakfast: 0, lunch: 0, dinner: 0 },
   view: 'foods', // 'foods' | 'examples' | 'shopping'
   expandedGroup: null,
 };
+
+export function presetFoodGroup(groupId) {
+  state.view = 'foods';
+  state.expandedGroup = groupId;
+}
 
 function computeDailyTotals(meals) {
   const items = [
@@ -81,7 +87,7 @@ function foodGroupCard(group) {
   return `
     <div class="card">
       <div data-expand-group="${group.id}" style="cursor:pointer; display:flex; justify-content:space-between; align-items:center;">
-        <h3 style="margin:0;">${group.label}</h3>
+        <h3 style="margin:0; display:flex; align-items:center; gap:8px;">${icon(group.id, 18)}${group.label}</h3>
         <span class="badge">${group.foods.length}</span>
       </div>
       ${expanded ? `

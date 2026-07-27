@@ -5,6 +5,12 @@ import { getExerciseById } from '../data/exercises.js';
 import { OUTDOOR_OPTIONS } from '../data/outdoor.js';
 import { RECOVERY_OPTIONS } from '../data/recovery.js';
 import { renderExerciseVisual } from './exerciseVisual.js';
+import { icon, iconForMuscleGroup } from '../data/icons.js';
+import { EXERCISES } from '../data/exercises.js';
+import { FOOD_GROUPS } from '../data/foods.js';
+import { presetExerciseSearch } from './exerciseLibrary.js';
+import { presetFoodGroup } from './diet.js';
+import { calculateTargets, DEFAULT_PROFILE } from '../data/profile.js';
 
 // `category` is chosen manually and independent from what the fixed weekly
 // schedule says today "should" be — that schedule only picks the initial
@@ -18,6 +24,7 @@ const state = {
   expandedId: null,
   checked: new Set(),
 };
+let dashboardSearchTerm = '';
 
 function todayIso() {
   const d = new Date();
@@ -49,6 +56,20 @@ function defaultCategoryFor(sessionType) {
   return 'gym'; // rest day: still let him browse, starting on Gimnàs
 }
 
+function getMarkDonePayload(currentState) {
+  if (currentState.category === 'gym') return { type: 'gym', variant: 'gym' };
+  if (currentState.category === 'casa') return { type: 'gym', variant: currentState.casaVariant };
+  if (currentState.category === 'outdoor') return { type: 'outdoor', variant: currentState.outdoorOptionId };
+  return { type: 'recovery', variant: currentState.recoveryOptionId };
+}
+
+function isMarkDoneDisabled(currentState, alreadyDone) {
+  if (alreadyDone) return true;
+  if (currentState.category === 'outdoor') return !currentState.outdoorOptionId;
+  if (currentState.category === 'recovery') return !currentState.recoveryOptionId;
+  return false;
+}
+
 function daysSinceLastSession(rows, today = new Date()) {
   const completedDates = rows.filter((r) => r.completed).map((r) => r.date);
   if (completedDates.length === 0) return null;
@@ -62,22 +83,23 @@ function daysSinceLastSession(rows, today = new Date()) {
 function motivationalBanner(daysSince) {
   if (daysSince === null || daysSince < 2) return '';
   return `
-    <div class="card" style="border-left: 4px solid var(--color-primary);">
-      <p>💪 Fa ${daysSince} dies que no marques cap sessió com a feta. Avui és un bon dia per tornar-hi!</p>
+    <div class="card" style="border-left: 4px solid var(--color-primary); display:flex; align-items:center; gap:10px;">
+      ${icon('bell', 22)}
+      <p style="margin:0;">Fa ${daysSince} dies que no marques cap sessió com a feta. Avui és un bon dia per tornar-hi!</p>
     </div>
   `;
 }
 
 function categorySelector() {
   const options = [
-    { id: 'gym', label: 'Gimnàs' },
-    { id: 'casa', label: 'Casa' },
-    { id: 'outdoor', label: "Aire lliure" },
-    { id: 'recovery', label: 'Recuperació' },
+    { id: 'gym', label: 'Gimnàs', iconName: 'gym' },
+    { id: 'casa', label: 'Casa', iconName: 'casa' },
+    { id: 'outdoor', label: 'Aire lliure', iconName: 'outdoor' },
+    { id: 'recovery', label: 'Recuperació', iconName: 'recovery' },
   ];
   return `
     <div class="segmented" style="flex-wrap: wrap; gap: 6px;">
-      ${options.map((o) => `<button data-category="${o.id}" class="${state.category === o.id ? 'selected' : ''}" style="flex: 1 1 45%;">${o.label}</button>`).join('')}
+      ${options.map((o) => `<button data-category="${o.id}" class="${state.category === o.id ? 'selected' : ''}" style="flex: 1 1 45%; display:flex; align-items:center; justify-content:center; gap:6px;">${icon(o.iconName)}${o.label}</button>`).join('')}
     </div>
   `;
 }
@@ -151,7 +173,7 @@ async function strengthSessionHtml(letter, status, alreadyDone, variant, extraTo
       ${rows.join('')}
     </div>
     ${cooldownSection()}
-    <button class="primary" id="mark-done" ${alreadyDone ? 'disabled' : ''}>${alreadyDone ? 'Sessió feta ✓' : 'Marcar sessió com a feta'}</button>
+    <button class="primary" id="mark-done" ${alreadyDone ? 'disabled' : ''}>${icon('check')}${alreadyDone ? 'Sessió feta' : 'Marcar sessió com a feta'}</button>
   `;
 }
 
@@ -187,7 +209,7 @@ function outdoorHtml(alreadyDone) {
   return `
     <h2>Aire lliure</h2>
     ${OUTDOOR_OPTIONS.map((o) => optionCard(o, state.outdoorOptionId === o.id, 'outdoor', 'outdoor')).join('')}
-    <button class="primary" id="mark-done" ${!state.outdoorOptionId || alreadyDone ? 'disabled' : ''}>${alreadyDone ? 'Sessió feta ✓' : 'Marcar sessió com a feta'}</button>
+    <button class="primary" id="mark-done" ${isMarkDoneDisabled(state, alreadyDone) ? 'disabled' : ''}>${icon('check')}${alreadyDone ? 'Sessió feta' : 'Marcar sessió com a feta'}</button>
   `;
 }
 
@@ -196,7 +218,99 @@ function recoveryHtml(alreadyDone) {
     <h2>Recuperació activa</h2>
     <p>Màquina de cardio suau al gimnàs — ideal per caps de setmana lliures o dies extra.</p>
     ${RECOVERY_OPTIONS.map((o) => optionCard(o, state.recoveryOptionId === o.id, 'recovery', 'recovery')).join('')}
-    <button class="primary" id="mark-done" ${!state.recoveryOptionId || alreadyDone ? 'disabled' : ''}>${alreadyDone ? 'Sessió feta ✓' : 'Marcar sessió com a feta'}</button>
+    <button class="primary" id="mark-done" ${isMarkDoneDisabled(state, alreadyDone) ? 'disabled' : ''}>${icon('check')}${alreadyDone ? 'Sessió feta' : 'Marcar sessió com a feta'}</button>
+  `;
+}
+
+function searchDashboard(term) {
+  if (!term) return [];
+  const t = term.toLowerCase();
+  const exerciseMatches = EXERCISES
+    .filter((ex) => `${ex.name} ${ex.muscleGroup}`.toLowerCase().includes(t))
+    .map((ex) => ({ kind: 'exercise', id: ex.id, name: ex.name, label: ex.muscleGroup }));
+  const foodMatches = [];
+  for (const group of FOOD_GROUPS) {
+    for (const food of group.foods) {
+      if (food.name.toLowerCase().includes(t)) {
+        foodMatches.push({ kind: 'food', groupId: group.id, name: food.name, label: group.label });
+      }
+    }
+  }
+  return [...exerciseMatches, ...foodMatches].slice(0, 6);
+}
+
+function searchBarHtml(term) {
+  return `
+    <div class="search-bar">
+      ${icon('search')}
+      <input type="search" id="dashboard-search" placeholder="Cerca un exercici o un aliment..." value="${term}">
+    </div>
+  `;
+}
+
+function searchResultsHtml(term) {
+  if (!term) return '';
+  const results = searchDashboard(term);
+  if (results.length === 0) {
+    return `<div class="card"><p style="margin:0; color:var(--color-text-muted);">Cap resultat.</p></div>`;
+  }
+  return `
+    <div class="card">
+      ${results.map((r) => `
+        <div class="search-result-row" data-search-kind="${r.kind}" data-search-id="${r.kind === 'exercise' ? r.id : r.groupId}" data-search-name="${r.name}">
+          ${r.kind === 'exercise' ? iconForMuscleGroup(r.label, 20) : icon(r.groupId, 20)}
+          <div style="flex:1;"><strong>${r.name}</strong><br><span class="badge">${r.label}</span></div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
+function categoryIconFor(category) {
+  return category === 'casa' ? 'gym' : category;
+}
+
+async function todaySummaryCardHtml(currentState, letter, alreadyDone) {
+  const profile = (await get('profile', 'main')) ?? DEFAULT_PROFILE;
+  const targets = calculateTargets(profile);
+  const categoryLabels = {
+    gym: `Gimnàs — Sessió ${letter}`,
+    casa: `Casa — Sessió ${letter}`,
+    outdoor: 'Aire lliure',
+    recovery: 'Recuperació',
+  };
+  const disabled = isMarkDoneDisabled(currentState, alreadyDone);
+  return `
+    <div class="card">
+      <h3>Avui</h3>
+      <p style="font-size:16px; font-weight:600; display:flex; align-items:center; gap:8px; margin:6px 0;">
+        ${icon(categoryIconFor(currentState.category), 20)}${categoryLabels[currentState.category]}
+      </p>
+      <p style="color:var(--color-text-muted); font-size:13px; display:flex; align-items:center; gap:6px;">
+        ${icon('flame', 16)}${targets.targetKcal} kcal · ${targets.proteinG}g proteïna
+      </p>
+      <button class="primary" id="dashboard-mark-done" ${disabled ? 'disabled' : ''} style="display:flex; align-items:center; justify-content:center; gap:6px; margin-top:10px;">
+        ${icon('check')}${alreadyDone ? 'Sessió feta' : 'Marcar sessió com a feta'}
+      </button>
+    </div>
+  `;
+}
+
+function quickNavTilesHtml() {
+  const items = [
+    { tab: 'diet', label: 'Dieta', iconName: 'diet' },
+    { tab: 'exercises', label: 'Exercicis', iconName: 'exercises' },
+    { tab: 'progress', label: 'Progrés', iconName: 'progress' },
+  ];
+  return `
+    <div class="quick-nav-grid">
+      ${items.map((i) => `
+        <button class="quick-nav-tile" data-goto-tab="${i.tab}">
+          ${icon(i.iconName, 22)}
+          <span>${i.label}</span>
+        </button>
+      `).join('')}
+    </div>
   `;
 }
 
@@ -228,7 +342,8 @@ export async function renderTodayScreen(container) {
     body = recoveryHtml(alreadyDone);
   }
 
-  container.innerHTML = `${banner}${categorySelector()}${body}`;
+  const summaryCard = await todaySummaryCardHtml(state, letter, alreadyDone);
+  container.innerHTML = `${searchBarHtml(dashboardSearchTerm)}${searchResultsHtml(dashboardSearchTerm)}${summaryCard}${quickNavTilesHtml()}${banner}${categorySelector()}${body}`;
   attachTodayListeners(container);
 }
 
@@ -239,6 +354,41 @@ function attachTodayListeners(container) {
       renderTodayScreen(container);
     });
   });
+  const searchInput = container.querySelector('#dashboard-search');
+  if (searchInput) {
+    searchInput.addEventListener('input', (e) => {
+      dashboardSearchTerm = e.target.value;
+      const cursorPos = e.target.selectionStart;
+      renderTodayScreen(container).then(() => {
+        const newInput = container.querySelector('#dashboard-search');
+        newInput.focus();
+        newInput.setSelectionRange(cursorPos, cursorPos);
+      });
+    });
+  }
+  container.querySelectorAll('[data-search-kind]').forEach((el) => {
+    el.addEventListener('click', () => {
+      if (el.dataset.searchKind === 'exercise') {
+        presetExerciseSearch(el.dataset.searchId, el.dataset.searchName);
+        document.querySelector('.tab-btn[data-tab="exercises"]').click();
+      } else {
+        presetFoodGroup(el.dataset.searchId);
+        document.querySelector('.tab-btn[data-tab="diet"]').click();
+      }
+    });
+  });
+  container.querySelectorAll('[data-goto-tab]').forEach((el) => {
+    el.addEventListener('click', () => {
+      document.querySelector(`.tab-btn[data-tab="${el.dataset.gotoTab}"]`).click();
+    });
+  });
+  const dashboardMarkBtn = container.querySelector('#dashboard-mark-done');
+  if (dashboardMarkBtn) {
+    dashboardMarkBtn.addEventListener('click', async () => {
+      await markTodayDone(getMarkDonePayload(state));
+      renderTodayScreen(container);
+    });
+  }
   container.querySelectorAll('[data-casa-variant]').forEach((btn) => {
     btn.addEventListener('click', () => {
       state.casaVariant = btn.dataset.casaVariant;
@@ -279,15 +429,7 @@ function attachTodayListeners(container) {
   const markBtn = container.querySelector('#mark-done');
   if (markBtn) {
     markBtn.addEventListener('click', async () => {
-      if (state.category === 'gym') {
-        await markTodayDone({ type: 'gym', variant: 'gym' });
-      } else if (state.category === 'casa') {
-        await markTodayDone({ type: 'gym', variant: state.casaVariant });
-      } else if (state.category === 'outdoor') {
-        await markTodayDone({ type: 'outdoor', variant: state.outdoorOptionId });
-      } else {
-        await markTodayDone({ type: 'recovery', variant: state.recoveryOptionId });
-      }
+      await markTodayDone(getMarkDonePayload(state));
       renderTodayScreen(container);
     });
   }

@@ -1,5 +1,6 @@
 import { getAll, put, get } from '../db.js';
 import { DEFAULT_PROFILE } from '../data/profile.js';
+import { icon } from '../data/icons.js';
 
 const STORES = ['profile', 'program', 'sessionLog', 'weightLog', 'exerciseWeights'];
 
@@ -70,7 +71,7 @@ async function renderPanelContent(panel, overlay) {
     <input type="number" id="profile-height" value="${profile.heightCm}" style="width:100%; margin-bottom:8px;">
     <label style="font-size:12px; color:var(--color-text-muted);">Pes (kg)</label>
     <input type="number" step="0.1" id="profile-weight" value="${profile.weightKg}" style="width:100%; margin-bottom:8px;">
-    <button class="secondary" id="save-profile-btn" style="margin-bottom:8px;">Desar dades personals</button>
+    <button class="secondary" id="save-profile-btn" style="margin-bottom:8px; display:flex; align-items:center; justify-content:center; gap:6px;">${icon('check', 16)}Desar dades personals</button>
     <p id="profile-status" style="font-size:13px; color:var(--color-accent);"></p>
 
     <hr>
@@ -82,7 +83,7 @@ async function renderPanelContent(panel, overlay) {
     <select id="log-type" style="width:100%; margin-bottom:8px; background:var(--color-surface-2); color:var(--color-text); border:1px solid var(--color-border); border-radius:8px; padding:10px;">
       ${LOG_OPTIONS.map((o) => `<option value="${o.value}">${o.label}</option>`).join('')}
     </select>
-    <button class="secondary" id="save-log-btn" style="margin-bottom:8px;">Marcar com a fet aquell dia</button>
+    <button class="secondary" id="save-log-btn" style="margin-bottom:8px; display:flex; align-items:center; justify-content:center; gap:6px;">${icon('check', 16)}Marcar com a fet aquell dia</button>
     <p id="log-status" style="font-size:13px; color:var(--color-accent);"></p>
 
     <hr>
@@ -90,7 +91,7 @@ async function renderPanelContent(panel, overlay) {
     <button class="primary" id="export-btn" style="margin-bottom:8px;">Exportar (descarregar JSON)</button>
     <input type="file" id="import-input" accept="application/json" style="margin-bottom:8px;">
 
-    <button class="secondary" id="close-btn">Tancar</button>
+    <button class="secondary" id="close-btn" style="display:flex; align-items:center; justify-content:center; gap:6px;">${icon('close', 16)}Tancar</button>
   `;
 
   panel.querySelector('#save-profile-btn').addEventListener('click', async () => {

@@ -2,6 +2,7 @@ import { EXERCISES } from '../data/exercises.js';
 import { getWorkoutUsagesForExercise } from '../data/workouts.js';
 import { renderExerciseVisual } from './exerciseVisual.js';
 import { get, put } from '../db.js';
+import { iconForMuscleGroup, icon } from '../data/icons.js';
 
 let searchTerm = '';
 let expandedId = null;
@@ -10,6 +11,11 @@ function matchesSearch(ex) {
   if (!searchTerm) return true;
   const haystack = `${ex.name} ${ex.muscleGroup}`.toLowerCase();
   return haystack.includes(searchTerm.toLowerCase());
+}
+
+export function presetExerciseSearch(id, name) {
+  searchTerm = name;
+  expandedId = id;
 }
 
 function usageBlock(ex) {
@@ -54,7 +60,7 @@ async function exerciseCard(ex) {
   return `
     <div class="card">
       <div data-expand-id="${ex.id}" style="cursor:pointer">
-        <strong>${ex.name}</strong> <span class="badge">${ex.muscleGroup}</span>
+        <strong>${ex.name}</strong> <span class="badge">${iconForMuscleGroup(ex.muscleGroup, 14)}${ex.muscleGroup}</span>
       </div>
       ${expanded ? await detailBlock(ex) : ''}
     </div>
@@ -66,7 +72,10 @@ export async function renderExerciseLibraryScreen(container) {
   const cards = await Promise.all(filtered.map(exerciseCard));
   container.innerHTML = `
     <h2>Exercicis</h2>
-    <input type="search" id="exercise-search" placeholder="Cerca per nom o grup muscular..." value="${searchTerm}" style="width:100%; margin-bottom:12px;">
+    <div class="search-bar">
+      ${icon('search')}
+      <input type="search" id="exercise-search" placeholder="Cerca per nom o grup muscular..." value="${searchTerm}">
+    </div>
     ${filtered.length === 0 ? '<p>Cap exercici coincideix amb la cerca.</p>' : cards.join('')}
   `;
   const searchInput = container.querySelector('#exercise-search');
