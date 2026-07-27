@@ -22,6 +22,8 @@ const state = {
   outdoorOptionId: null,
   recoveryOptionId: null,
   expandedId: null,
+  expandedWarmup: null,
+  expandedCooldown: null,
   checked: new Set(),
 };
 let dashboardSearchTerm = '';
@@ -155,14 +157,22 @@ function warmupSection() {
   return `
     <div class="card">
       <h3>Escalfament</h3>
-      ${GYM_WARMUP.map((w, i) => `
-        <div style="display:flex; gap:10px; align-items:flex-start; margin-bottom:${i < GYM_WARMUP.length - 1 ? '14px' : '0'};">
-          <div style="width:36px; height:36px; flex-shrink:0; background:var(--color-surface-2); border-radius:8px; display:flex; align-items:center; justify-content:center; color:var(--color-primary);">
-            ${icon(WARMUP_ICONS[i] ?? 'check', 20)}
+      ${GYM_WARMUP.map((w, i) => {
+        const expanded = state.expandedWarmup === i;
+        return `
+          <div class="checkbox-row" style="align-items:flex-start;">
+            <div data-expand-warmup="${i}" style="cursor:pointer; display:flex; gap:10px; align-items:flex-start; flex:1;">
+              <div style="width:36px; height:36px; flex-shrink:0; background:var(--color-surface-2); border-radius:8px; display:flex; align-items:center; justify-content:center; color:var(--color-primary);">
+                ${icon(WARMUP_ICONS[i] ?? 'check', 20)}
+              </div>
+              <div style="flex:1;">
+                <p style="margin:0;"><strong>${w.phase}</strong> (${w.duration}): ${w.description}</p>
+                ${expanded ? `<ul style="margin:10px 0 0;">${w.steps.map((s) => `<li>${s}</li>`).join('')}</ul>` : ''}
+              </div>
+            </div>
           </div>
-          <p style="margin:0;"><strong>${w.phase}</strong> (${w.duration}): ${w.description}</p>
-        </div>
-      `).join('')}
+        `;
+      }).join('')}
     </div>
   `;
 }
@@ -171,7 +181,22 @@ function cooldownSection() {
   return `
     <div class="card">
       <h3>Tornada a la calma</h3>
-      <ul>${COOLDOWN_STRETCH.map((s) => `<li>${s}</li>`).join('')}</ul>
+      ${COOLDOWN_STRETCH.map((s, i) => {
+        const expanded = state.expandedCooldown === i;
+        return `
+          <div class="checkbox-row" style="align-items:flex-start;">
+            <div data-expand-cooldown="${i}" style="cursor:pointer; display:flex; gap:10px; align-items:flex-start; flex:1;">
+              <div style="width:36px; height:36px; flex-shrink:0; background:var(--color-surface-2); border-radius:8px; display:flex; align-items:center; justify-content:center; color:var(--color-primary);">
+                ${icon(s.icon, 20)}
+              </div>
+              <div style="flex:1;">
+                <p style="margin:0;"><strong>${s.name}</strong> (${s.duration}): ${s.description}</p>
+                ${expanded ? `<ul style="margin:10px 0 0;">${s.steps.map((st) => `<li>${st}</li>`).join('')}</ul>` : ''}
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('')}
     </div>
   `;
 }
@@ -435,6 +460,20 @@ function attachTodayListeners(container) {
   container.querySelectorAll('[data-expand-id]').forEach((el) => {
     el.addEventListener('click', () => {
       state.expandedId = state.expandedId === el.dataset.expandId ? null : el.dataset.expandId;
+      renderTodayScreen(container);
+    });
+  });
+  container.querySelectorAll('[data-expand-warmup]').forEach((el) => {
+    el.addEventListener('click', () => {
+      const idx = Number(el.dataset.expandWarmup);
+      state.expandedWarmup = state.expandedWarmup === idx ? null : idx;
+      renderTodayScreen(container);
+    });
+  });
+  container.querySelectorAll('[data-expand-cooldown]').forEach((el) => {
+    el.addEventListener('click', () => {
+      const idx = Number(el.dataset.expandCooldown);
+      state.expandedCooldown = state.expandedCooldown === idx ? null : idx;
       renderTodayScreen(container);
     });
   });
