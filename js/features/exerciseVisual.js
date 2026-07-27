@@ -1,4 +1,5 @@
 import { renderAnimatedPoseSvg, getPoseFrames } from '../data/poses.js';
+import { icon } from '../data/icons.js';
 
 // Prefers a real reference photo (CC-BY-SA, from wger.de) when curated; falls
 // back to our own animated pose diagram for the exercises we couldn't find
@@ -17,4 +18,16 @@ export function renderExerciseVisual(ex) {
   }
   const [frameA, frameB] = getPoseFrames(ex.pose);
   return `<div class="pose-wrap">${renderAnimatedPoseSvg(frameA, frameB)}</div>`;
+}
+
+// Small at-a-glance thumbnail for collapsed rows, so you can see what an
+// exercise is without expanding it or opening the video. Uses the same
+// consistent icon set (js/data/icons.js) as the rest of the app instead of
+// photos, so all 14 exercises share one visual style.
+export function renderExerciseThumb(ex, size = 44) {
+  return `
+    <div style="width:${size}px; height:${size}px; flex-shrink:0; background:var(--color-surface-2); border-radius:8px; display:flex; align-items:center; justify-content:center; color:var(--color-primary);">
+      ${icon(ex.id, size - 18)}
+    </div>
+  `;
 }

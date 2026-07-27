@@ -4,7 +4,7 @@ import { WORKOUTS, getSetsForPhase, GYM_WARMUP, COOLDOWN_STRETCH } from '../data
 import { getExerciseById } from '../data/exercises.js';
 import { OUTDOOR_OPTIONS } from '../data/outdoor.js';
 import { RECOVERY_OPTIONS } from '../data/recovery.js';
-import { renderExerciseVisual } from './exerciseVisual.js';
+import { renderExerciseVisual, renderExerciseThumb } from './exerciseVisual.js';
 import { icon, iconForMuscleGroup } from '../data/icons.js';
 import { EXERCISES } from '../data/exercises.js';
 import { FOOD_GROUPS } from '../data/foods.js';
@@ -115,8 +115,9 @@ async function exerciseRow(item, phase, variant) {
     <div class="checkbox-row${checked ? ' done' : ''}">
       <input type="checkbox" data-exercise-id="${ex.id}" ${checked ? 'checked' : ''}>
       <div style="flex:1">
-        <div data-expand-id="${ex.id}" style="cursor:pointer">
-          <strong>${label}</strong> — ${sets}×${item.reps}
+        <div data-expand-id="${ex.id}" style="cursor:pointer; display:flex; gap:10px; align-items:center;">
+          ${renderExerciseThumb(ex)}
+          <div><strong>${label}</strong> — ${sets}×${item.reps}</div>
         </div>
         ${expanded ? await renderExerciseDetail(ex, display) : ''}
       </div>
@@ -155,7 +156,7 @@ function warmupSection() {
 function cooldownSection() {
   return `
     <div class="card">
-      <h3>Cooldown</h3>
+      <h3>Tornada a la calma</h3>
       <ul>${COOLDOWN_STRETCH.map((s) => `<li>${s}</li>`).join('')}</ul>
     </div>
   `;
@@ -199,7 +200,7 @@ function optionCard(o, selected, nameAttr, dataAttr) {
       ${selected && (o.warmup || o.circuit || o.cooldown) ? `
         ${o.warmup ? `<p style="margin-top:10px;"><strong>Escalfament:</strong> ${o.warmup}</p>` : ''}
         ${o.circuit ? `<ul>${o.circuit.map((c) => `<li>${c.exercise} — ${c.sets}×${c.reps}</li>`).join('')}</ul>` : ''}
-        ${o.cooldown ? `<p><strong>Cooldown:</strong> ${o.cooldown}</p>` : ''}
+        ${o.cooldown ? `<p><strong>Tornada a la calma:</strong> ${o.cooldown}</p>` : ''}
       ` : ''}
     </div>
   `;

@@ -30,6 +30,20 @@ const ICONS = {
   fruita: '<path d="M12 8a5 5 0 015 5c0 4-3 7-5 7s-5-3-5-7a5 5 0 015-5z"/><path d="M12 8V5M12 5c1-1 2-1 3-1"/>',
   lactics: '<path d="M8 3h8l-1 4H9L8 3z"/><path d="M8 7h8l-1 13H9L8 7z"/>',
   greixos: '<path d="M12 3c3 5 6 8 6 11a6 6 0 01-12 0c0-3 3-6 6-11z"/>',
+  squat: '<circle cx="4" cy="12" r="2"/><circle cx="20" cy="12" r="2"/><path d="M6 12h12"/><path d="M9 12v4l-2 6M15 12v4l2 6"/>',
+  benchPress: '<path d="M4 18h16"/><circle cx="7" cy="6" r="2"/><circle cx="17" cy="6" r="2"/><path d="M9 6h6"/><path d="M9 6v8M15 6v8"/>',
+  seatedCableRow: '<circle cx="19" cy="5" r="2"/><path d="M19 7L9 15"/><path d="M9 15h-3"/><path d="M6 15v6M6 21h6"/>',
+  dbOverheadPress: '<circle cx="7" cy="4" r="2"/><circle cx="17" cy="4" r="2"/><path d="M7 6v4M17 6v4"/><path d="M7 10l5 4 5-4"/><path d="M12 14v6"/>',
+  hipThrust: '<path d="M3 16h5v5"/><path d="M8 16c3-6 9-6 12 0"/><path d="M20 16v5"/>',
+  plank: '<path d="M2 18l6-4h8l6 4"/><path d="M4 21h16"/>',
+  deadlift: '<circle cx="5" cy="19" r="2"/><circle cx="19" cy="19" r="2"/><path d="M7 19h10"/><path d="M12 19l3-13"/><path d="M15 6l4 2"/>',
+  latPulldownOrAssistedPullup: '<circle cx="12" cy="4" r="2"/><path d="M12 6v3"/><path d="M6 9h12"/><path d="M6 9v4M18 9v4"/><path d="M9 20v-4M15 20v-4"/>',
+  inclineDbPress: '<path d="M4 20l10-14"/><circle cx="9" cy="4" r="2"/><circle cx="17" cy="8" r="2"/><path d="M9 6v3M17 10v3"/>',
+  reverseLunge: '<path d="M12 3v10"/><ellipse cx="8" cy="19" rx="3" ry="1.5"/><ellipse cx="16" cy="15" rx="3" ry="1.5"/>',
+  lateralRaise: '<path d="M12 4v10"/><path d="M2 9h20"/><circle cx="2" cy="9" r="2"/><circle cx="22" cy="9" r="2"/>',
+  facePull: '<circle cx="12" cy="4" r="2"/><path d="M12 6v3"/><path d="M6 20l6-11 6 11"/>',
+  deadBug: '<path d="M2 16h20"/><path d="M12 16l-6-10"/><path d="M12 16l6 6"/>',
+  farmerCarry: '<rect x="2" y="8" width="4" height="10" rx="1"/><rect x="18" y="8" width="4" height="10" rx="1"/><path d="M12 6v9"/><path d="M9 19l3-4 3 4"/>',
 };
 
 const MUSCLE_KEYWORD_ORDER = [

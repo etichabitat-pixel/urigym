@@ -24,7 +24,7 @@ export const EXERCISES = [
   },
   {
     id: 'benchPress',
-    name: 'Press de banca',
+    name: 'Pressió sobre banc',
     muscleGroup: 'Pit/Tríceps',
     sessionOf: 'A',
     pose: 'pushPosition',
@@ -70,7 +70,7 @@ export const EXERCISES = [
   },
   {
     id: 'dbOverheadPress',
-    name: 'Press militar amb peses',
+    name: 'Pressió militar amb peses',
     muscleGroup: 'Espatlles',
     sessionOf: 'A',
     pose: 'overhead',
@@ -88,8 +88,8 @@ export const EXERCISES = [
       'Empènyer amb impuls de cames',
       'No baixar del tot el pes entre repeticions',
     ],
-    homeShort: { name: "Press amb ampolles d'aigua o motxilla", notes: 'Ampolles grans o una motxilla amb pes funcionen igual que unes peses.' },
-    homeFull: { name: 'Press pike (flexions en piqué)', notes: 'Malucs amunt, cap entre les mans, flexiona i estén els braços.' },
+    homeShort: { name: "Pressió amb ampolles d'aigua o motxilla", notes: 'Ampolles grans o una motxilla amb pes funcionen igual que unes peses.' },
+    homeFull: { name: 'Pressió pike (flexions en piqué)', notes: 'Malucs amunt, cap entre les mans, flexiona i estén els braços.' },
   },
   {
     id: 'hipThrust',
@@ -188,7 +188,7 @@ export const EXERCISES = [
   },
   {
     id: 'inclineDbPress',
-    name: 'Press inclinat amb peses',
+    name: 'Pressió inclinada amb peses',
     muscleGroup: 'Pit superior/Espatlles',
     sessionOf: 'B',
     pose: 'pushPosition',

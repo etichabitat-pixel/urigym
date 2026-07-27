@@ -1,6 +1,6 @@
 import { EXERCISES } from '../data/exercises.js';
 import { getWorkoutUsagesForExercise } from '../data/workouts.js';
-import { renderExerciseVisual } from './exerciseVisual.js';
+import { renderExerciseVisual, renderExerciseThumb } from './exerciseVisual.js';
 import { get, put } from '../db.js';
 import { iconForMuscleGroup, icon } from '../data/icons.js';
 
@@ -59,8 +59,9 @@ async function exerciseCard(ex) {
   const expanded = expandedId === ex.id;
   return `
     <div class="card">
-      <div data-expand-id="${ex.id}" style="cursor:pointer">
-        <strong>${ex.name}</strong> <span class="badge">${iconForMuscleGroup(ex.muscleGroup, 14)}${ex.muscleGroup}</span>
+      <div data-expand-id="${ex.id}" style="cursor:pointer; display:flex; gap:10px; align-items:center;">
+        ${renderExerciseThumb(ex)}
+        <div><strong>${ex.name}</strong> <span class="badge">${iconForMuscleGroup(ex.muscleGroup, 14)}${ex.muscleGroup}</span></div>
       </div>
       ${expanded ? await detailBlock(ex) : ''}
     </div>
