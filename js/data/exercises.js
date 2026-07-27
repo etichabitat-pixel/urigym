@@ -33,7 +33,7 @@ export const EXERCISES = [
     cues: [
       "Estirat al banc, omòplats enrere i avall, pit amunt",
       "Peus ben plantats a terra per estabilitat",
-      "Baixa la barra/mancuernes de manera controlada fins tocar lleugerament el pit",
+      "Baixa la barra/peses de manera controlada fins tocar lleugerament el pit",
       "Empeny cap amunt en línia lleugerament diagonal cap al cap",
       "Expulsa l'aire en empènyer",
     ],
@@ -70,7 +70,7 @@ export const EXERCISES = [
   },
   {
     id: 'dbOverheadPress',
-    name: 'Press militar amb mancuernes',
+    name: 'Press militar amb peses',
     muscleGroup: 'Espatlles',
     sessionOf: 'A',
     pose: 'overhead',
@@ -78,7 +78,7 @@ export const EXERCISES = [
     referenceImage: { url: 'https://wger.de/media/exercise-images/123/dumbbell-shoulder-press-large-1.png', license: 'CC-BY-SA 3', licenseUrl: 'https://creativecommons.org/licenses/by-sa/3.0/deed.en', author: "wger.de", source: 'wger.de' },
     cues: [
       'Peus a l\'amplada de malucs, core actiu',
-      'Mancuernes a l\'alçada de les espatlles, colzes davant',
+      'Peses a l\'alçada de les espatlles, colzes davant',
       "Empeny cap amunt fins estirar els braços del tot, sense arquejar l'esquena",
       'Baixa de manera controlada fins tornar a l\'espatlla',
       "No bloquegis l'aire; expulsa'l en empènyer",
@@ -88,7 +88,7 @@ export const EXERCISES = [
       'Empènyer amb impuls de cames',
       'No baixar del tot el pes entre repeticions',
     ],
-    homeShort: { name: "Press amb ampolles d'aigua o motxilla", notes: 'Ampolles grans o una motxilla amb pes funcionen igual que unes mancuernes.' },
+    homeShort: { name: "Press amb ampolles d'aigua o motxilla", notes: 'Ampolles grans o una motxilla amb pes funcionen igual que unes peses.' },
     homeFull: { name: 'Press pike (flexions en piqué)', notes: 'Malucs amunt, cap entre les mans, flexiona i estén els braços.' },
   },
   {
@@ -139,7 +139,7 @@ export const EXERCISES = [
   },
   {
     id: 'deadlift',
-    name: 'Peso mort',
+    name: 'Pes mort',
     muscleGroup: 'Cadena posterior',
     sessionOf: 'B',
     pose: 'bent',
@@ -158,7 +158,7 @@ export const EXERCISES = [
       'Allunyar el pes del cos durant la pujada',
     ],
     homeShort: { name: 'Bàscula de maluc a una cama (sense pes)', notes: 'Practica el patró de moviment sense càrrega, una cama enlaire per equilibri.' },
-    homeFull: { name: 'Peso mort romanès amb motxilla/garrafes', notes: 'El mateix patró amb qualsevol pes casolà.' },
+    homeFull: { name: 'Pes mort romanès amb motxilla/garrafes', notes: 'El mateix patró amb qualsevol pes casolà.' },
   },
   {
     id: 'latPulldownOrAssistedPullup',
@@ -188,7 +188,7 @@ export const EXERCISES = [
   },
   {
     id: 'inclineDbPress',
-    name: 'Press inclinat amb mancuernes',
+    name: 'Press inclinat amb peses',
     muscleGroup: 'Pit superior/Espatlles',
     sessionOf: 'B',
     pose: 'pushPosition',
@@ -196,7 +196,7 @@ export const EXERCISES = [
     referenceImage: { url: 'https://wger.de/media/exercise-images/16/Incline-press-1.png', license: 'CC-BY-SA 3', licenseUrl: 'https://creativecommons.org/licenses/by-sa/3.0/deed.en', author: "wger.de", source: 'wger.de' },
     cues: [
       "Banc a 30-45°, peus ben plantats a terra",
-      "Mancuernes a l'alçada del pit superior, colzes ~45° del cos",
+      "Peses a l'alçada del pit superior, colzes ~45° del cos",
       "Empeny cap amunt fins gairebé estirar els braços del tot",
       'Baixa de manera controlada fins sentir estirament al pit',
       "No arquejar excessivament l'esquena baixa",
@@ -204,14 +204,14 @@ export const EXERCISES = [
     commonMistakes: [
       'Inclinació massa vertical (es converteix en press d\'espatlla)',
       'Deixar caure els colzes completament oberts',
-      'Fer rebotar les mancuernes a baix',
+      'Fer rebotar les peses a baix',
     ],
     homeShort: { name: 'Flexions amb peus elevats', notes: "Peus sobre un esglaó per traslladar més èmfasi a la part superior del pit." },
     homeFull: { name: 'Flexions declinades (peus ben elevats)', notes: 'Com més amunt els peus, més s\'assembla a un press inclinat invertit.' },
   },
   {
     id: 'reverseLunge',
-    name: 'Zancada enrere',
+    name: 'Gambada enrere',
     muscleGroup: 'Cames/Glutis',
     sessionOf: 'B',
     pose: 'bent',
@@ -229,8 +229,8 @@ export const EXERCISES = [
       'Perdre l\'equilibri per falta de control del tronc',
       'Genoll del darrere colpejant fort a terra',
     ],
-    homeShort: { name: 'Zancada enrere sense pes', notes: 'Exactament el mateix moviment, sense mancuernes.' },
-    homeFull: { name: 'Zancades búlgares (peu del darrere elevat)', notes: 'Peu del darrere sobre una cadira; augmenta molt la dificultat sense pes.' },
+    homeShort: { name: 'Gambada enrere sense pes', notes: 'Exactament el mateix moviment, sense peses.' },
+    homeFull: { name: 'Gambades búlgares (peu del darrere elevat)', notes: 'Peu del darrere sobre una cadira; augmenta molt la dificultat sense pes.' },
   },
   {
     id: 'lateralRaise',
@@ -241,7 +241,7 @@ export const EXERCISES = [
     videoUrl: 'https://www.youtube.com/watch?v=b6KtNTSHA54',
     referenceImage: { url: 'https://wger.de/media/exercise-images/1744/cb9263c4-39fc-4261-8d30-a5d6d57841c1.jpg', license: 'CC-BY-SA 4', licenseUrl: 'https://creativecommons.org/licenses/by-sa/4.0/deed.en', author: "Tierrasverdes", source: 'wger.de' },
     cues: [
-      'Mancuernes als costats, lleuger flexió de colzes',
+      'Peses als costats, lleuger flexió de colzes',
       "Eleva els braços cap als costats fins l'alçada de les espatlles",
       'Lidera el moviment amb els colzes, no amb les mans',
       'Baixa de manera controlada, sense deixar caure el pes',
@@ -252,7 +252,7 @@ export const EXERCISES = [
       "Pujar els braços per sobre de l'alçada de l'espatlla",
       'Encongir les espatlles cap a les orelles',
     ],
-    homeShort: { name: 'Elevacions amb ampolles d\'aigua', notes: 'Ampolles d\'aigua o llibres fan la mateixa funció que unes mancuernes lleugeres.' },
+    homeShort: { name: 'Elevacions amb ampolles d\'aigua', notes: 'Ampolles d\'aigua o llibres fan la mateixa funció que unes peses lleugeres.' },
     homeFull: { name: 'Elevacions amb banda elàstica', notes: 'Trepitja el centre d\'una banda elàstica i eleva els braços contra la resistència.' },
   },
   {
@@ -319,7 +319,7 @@ export const EXERCISES = [
       'Inclinar el tronc cap a un costat',
       'Passos massa llargs que desestabilitzen',
     ],
-    homeShort: { name: "Caminada del granger amb garrafes d'aigua", notes: 'Dues garrafes de 5L fan la mateixa funció que unes mancuernes.' },
+    homeShort: { name: "Caminada del granger amb garrafes d'aigua", notes: 'Dues garrafes de 5L fan la mateixa funció que unes peses.' },
     homeFull: { name: 'Caminada del granger amb motxilles carregades', notes: 'Omple dues motxilles amb llibres o objectes pesats.' },
   },
 ];
