@@ -229,7 +229,7 @@ export const EXERCISES = [
       'Perdre l\'equilibri per falta de control del tronc',
       'Genoll del darrere colpejant fort a terra',
     ],
-    homeShort: { name: 'Gambada enrere sense pes', notes: 'Exactament el mateix moviment, sense peses.' },
+    homeShort: { name: 'Gambada enrere sense pes', notes: "Exactament el mateix moviment, sense peses. Si et costa l'equilibri, aguanta't amb una mà al respatller d'una cadira." },
     homeFull: { name: 'Gambades búlgares (peu del darrere elevat)', notes: 'Peu del darrere sobre una cadira; augmenta molt la dificultat sense pes.' },
   },
   {

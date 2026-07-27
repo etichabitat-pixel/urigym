@@ -15,6 +15,7 @@ const ICONS = {
   flame: '<path d="M12 3c1 3-3 4-3 7a3 3 0 006 0c0-1-1-2-1-3 2 1 3 3 3 5a5 5 0 01-10 0c0-4 3-5 5-9z"/>',
   target: '<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r="0.5"/>',
   bell: '<path d="M6 16v-5a6 6 0 0112 0v5l2 2H4l2-2z"/><path d="M10 20a2 2 0 004 0"/>',
+  info: '<circle cx="12" cy="12" r="9"/><line x1="12" y1="11" x2="12" y2="16"/><circle cx="12" cy="7.5" r="0.6" fill="currentColor" stroke="none"/>',
   cames: '<path d="M9 3v8l-2 10M15 3v8l2 10"/>',
   glutis: '<path d="M7 4h10v6a5 5 0 01-10 0V4z"/><path d="M12 4v6"/>',
   pit: '<path d="M4 8a4 4 0 018 0 4 4 0 018 0v3a6 6 0 01-8 6 6 6 0 01-8-6V8z"/>',

@@ -23,11 +23,20 @@ export function renderExerciseVisual(ex) {
 // Small at-a-glance thumbnail for collapsed rows, so you can see what an
 // exercise is without expanding it or opening the video. Uses the same
 // consistent icon set (js/data/icons.js) as the rest of the app instead of
-// photos, so all 14 exercises share one visual style.
-export function renderExerciseThumb(ex, size = 44) {
+// photos, so all 14 exercises share one visual style. When `isHome` is true,
+// a small house badge overlays the icon so the home variant is visually
+// distinguishable from the gym one at a glance, not just by its label text.
+export function renderExerciseThumb(ex, size = 44, isHome = false) {
   return `
-    <div style="width:${size}px; height:${size}px; flex-shrink:0; background:var(--color-surface-2); border-radius:8px; display:flex; align-items:center; justify-content:center; color:var(--color-primary);">
-      ${icon(ex.id, size - 18)}
+    <div style="position:relative; width:${size}px; height:${size}px; flex-shrink:0;">
+      <div style="width:100%; height:100%; background:var(--color-surface-2); border-radius:8px; display:flex; align-items:center; justify-content:center; color:var(--color-primary);">
+        ${icon(ex.id, size - 18)}
+      </div>
+      ${isHome ? `
+        <div style="position:absolute; bottom:-4px; right:-4px; width:18px; height:18px; background:var(--color-accent); border-radius:50%; display:flex; align-items:center; justify-content:center; color:#0a0b10; border:2px solid var(--color-bg);">
+          ${icon('casa', 10)}
+        </div>
+      ` : ''}
     </div>
   `;
 }

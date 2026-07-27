@@ -116,7 +116,7 @@ async function exerciseRow(item, phase, variant) {
       <input type="checkbox" data-exercise-id="${ex.id}" ${checked ? 'checked' : ''}>
       <div style="flex:1">
         <div data-expand-id="${ex.id}" style="cursor:pointer; display:flex; gap:10px; align-items:center;">
-          ${renderExerciseThumb(ex)}
+          ${renderExerciseThumb(ex, 44, variant !== 'gym')}
           <div><strong>${label}</strong> — ${sets}×${item.reps}</div>
         </div>
         ${expanded ? await renderExerciseDetail(ex, display) : ''}
@@ -134,11 +134,16 @@ async function renderExerciseDetail(ex, homeInfo) {
         <label for="weight-${ex.id}">Pes que faig servir:</label>
         <input type="number" step="0.5" id="weight-${ex.id}" data-weight-id="${ex.id}" value="${savedWeight ? savedWeight.weight : ''}" placeholder="kg">
       </div>
-      <p><strong>Com fer-ho:</strong></p>
-      <ul>${ex.cues.map((c) => `<li>${c}</li>`).join('')}</ul>
-      <p><strong>Errors comuns:</strong></p>
-      <ul>${ex.commonMistakes.map((c) => `<li>${c}</li>`).join('')}</ul>
-      ${homeInfo ? `<p><strong>${homeInfo.name}:</strong> ${homeInfo.notes}</p>` : ''}
+      ${homeInfo ? `
+        <p style="display:flex; align-items:center; gap:6px;">${icon('casa', 16)}<strong>${homeInfo.name}:</strong> ${homeInfo.notes}</p>
+        <p><strong>Punts clau (adapta-ho amb el que tinguis a mà):</strong></p>
+        <ul>${ex.cues.map((c) => `<li>${c}</li>`).join('')}</ul>
+      ` : `
+        <p><strong>Com fer-ho:</strong></p>
+        <ul>${ex.cues.map((c) => `<li>${c}</li>`).join('')}</ul>
+        <p><strong>Errors comuns:</strong></p>
+        <ul>${ex.commonMistakes.map((c) => `<li>${c}</li>`).join('')}</ul>
+      `}
       ${ex.videoUrl ? `<a class="video-link-secondary" href="${ex.videoUrl}" target="_blank" rel="noopener">▶ Vídeo tutorial complet (opcional)</a>` : ''}
     </div>
   `;
@@ -178,8 +183,18 @@ async function strengthSessionHtml(letter, status, alreadyDone, variant, extraTo
   `;
 }
 
+function casaEquipmentTip() {
+  return `
+    <div class="card" style="border-left: 4px solid var(--color-accent); display:flex; gap:10px; align-items:flex-start;">
+      ${icon('info', 20)}
+      <p style="margin:0; font-size:13px;"><strong>Consell:</strong> uns peses ajustables (10-25€) i una banda elàstica de resistència (5-10€) et permeten fer gairebé els mateixos exercicis que al gimnàs, sense dependre només de cadires, motxilles o garrafes. Cada exercici de casa (marcat amb ${icon('casa', 12)}) porta la seva alternativa amb el que ja tinguis a mà.</p>
+    </div>
+  `;
+}
+
 function casaVariantToggle() {
   return `
+    ${casaEquipmentTip()}
     <div class="segmented">
       <button data-casa-variant="casaCurt" class="${state.casaVariant === 'casaCurt' ? 'selected' : ''}">Curt (dia de nens)</button>
       <button data-casa-variant="casaComplet" class="${state.casaVariant === 'casaComplet' ? 'selected' : ''}">Complet (vacances)</button>
