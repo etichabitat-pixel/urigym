@@ -23,6 +23,7 @@ function registerServiceWorker() {
 }
 
 async function setActiveTab(tab) {
+  document.body.classList.remove('start-active');
   document.getElementById('tabbar').style.display = 'flex';
   document.querySelectorAll('.tab-btn[data-tab]').forEach((btn) => {
     btn.classList.toggle('active', btn.dataset.tab === tab);
@@ -33,10 +34,12 @@ async function setActiveTab(tab) {
 
 // The header logo always brings you back here — the app opens on this
 // picker instead of jumping straight into Gimnàs, so choosing a section is
-// always an explicit step.
+// always an explicit step. It has no sidebar, so it gets its own layout
+// (see `.start-active` in styles.css) instead of the tab-content one.
 async function showStartScreen() {
   document.querySelectorAll('.tab-btn[data-tab]').forEach((btn) => btn.classList.remove('active'));
   document.getElementById('tabbar').style.display = 'none';
+  document.body.classList.add('start-active');
   const screen = document.getElementById('screen');
   await renderStartScreen(screen);
 }

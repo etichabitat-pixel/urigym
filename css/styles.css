@@ -240,3 +240,26 @@ hr { border: none; border-top: 1px solid var(--color-border); margin: 16px 0; }
   color: var(--color-primary);
 }
 .start-tile span { color: var(--color-text); font-weight: 700; font-size: 15px; }
+
+/* The start screen has no sidebar/tabbar, so it doesn't use the tab-content
+   wide-screen layout (sidebar offset) — it centers itself in the full
+   viewport instead, on every screen size. */
+body.start-active #screen {
+  padding-bottom: calc(24px + env(safe-area-inset-bottom));
+  background: radial-gradient(circle at 50% 0%, #1a1613 0%, #111111 60%);
+}
+@media (min-width: 900px) {
+  body.start-active #screen {
+    margin-left: 0;
+    max-width: none;
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 24px;
+  }
+  body.start-active .start-grid { max-width: 480px; gap: 16px; }
+  body.start-active .start-tile { padding: 32px 16px; }
+  body.start-active .start-tile span { font-size: 17px; }
+}
