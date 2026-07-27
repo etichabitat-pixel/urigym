@@ -1,9 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 240">
-  <rect width="560" height="240" fill="#111111"/>
-  <rect x="0" y="46" width="560" height="12" fill="#d9a520"/>
-  <rect x="0" y="168" width="560" height="12" fill="#d9a520"/>
-  <rect x="40" y="66" width="480" height="94" fill="#d9a520"/>
-  <rect x="54" y="78" width="452" height="70" fill="none" stroke="#111111" stroke-width="3"/>
-  <text x="280" y="122" text-anchor="middle" dominant-baseline="central" font-family="Rockwell, 'Rockwell Bold', serif" font-size="54" font-weight="700" letter-spacing="1" fill="#111111">URIGYM</text>
-  <text x="280" y="200" text-anchor="middle" font-family="-apple-system, system-ui, sans-serif" font-size="15" font-weight="700" letter-spacing="3" fill="#d9a520">EXERCICI · ALIMENTACIÓ · PROGRÉS</text>
-</svg>

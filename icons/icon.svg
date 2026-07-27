@@ -1,8 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <rect width="512" height="512" fill="#111111"/>
-  <rect x="0" y="150" width="512" height="18" fill="#d9a520"/>
-  <rect x="0" y="344" width="512" height="18" fill="#d9a520"/>
-  <rect x="48" y="176" width="416" height="160" fill="#d9a520"/>
-  <rect x="66" y="194" width="380" height="124" fill="none" stroke="#111111" stroke-width="4"/>
-  <text x="256" y="264" text-anchor="middle" dominant-baseline="central" font-family="Rockwell, 'Rockwell Bold', serif" font-size="72" font-weight="700" letter-spacing="1" fill="#111111">URIGYM</text>
-</svg>

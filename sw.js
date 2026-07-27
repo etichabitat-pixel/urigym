@@ -23,7 +23,6 @@ const APP_SHELL = [
   './js/features/exerciseLibrary.js',
   './js/features/progress.js',
   './js/features/backup.js',
-  './icons/icon.svg',
   './icons/icon-192.png',
   './icons/icon-512.png',
   './icons/apple-touch-icon.png',

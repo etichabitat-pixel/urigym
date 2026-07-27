@@ -56,7 +56,7 @@ function weightSparkline(entries) {
     const y = 90 - ((e.weight - min) / range) * 80;
     return `${x},${y}`;
   }).join(' ');
-  return `<svg viewBox="0 0 300 100" width="100%"><polyline points="${points}" fill="none" stroke="#34e4a0" stroke-width="3"/></svg>`;
+  return `<svg viewBox="0 0 300 100" width="100%"><polyline points="${points}" fill="none" stroke="#8a9a5b" stroke-width="3"/></svg>`;
 }
 
 function progressBar(current, total) {

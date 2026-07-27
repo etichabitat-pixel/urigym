@@ -33,7 +33,7 @@ export function renderExerciseThumb(ex, size = 44, isHome = false) {
         ${icon(ex.id, size - 18)}
       </div>
       ${isHome ? `
-        <div style="position:absolute; bottom:-4px; right:-4px; width:18px; height:18px; background:var(--color-accent); border-radius:50%; display:flex; align-items:center; justify-content:center; color:#0a0b10; border:2px solid var(--color-bg);">
+        <div style="position:absolute; bottom:-4px; right:-4px; width:18px; height:18px; background:var(--color-accent); border-radius:50%; display:flex; align-items:center; justify-content:center; color:#111111; border:2px solid var(--color-bg);">
           ${icon('casa', 10)}
         </div>
       ` : ''}
