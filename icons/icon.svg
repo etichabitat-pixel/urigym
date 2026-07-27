@@ -1,10 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192">
-  <rect width="192" height="192" rx="32" fill="#101114"/>
-  <g stroke="#ff6a3d" stroke-width="14" stroke-linecap="round">
-    <line x1="40" y1="96" x2="152" y2="96"/>
-    <line x1="52" y1="70" x2="52" y2="122"/>
-    <line x1="140" y1="70" x2="140" y2="122"/>
-    <line x1="30" y1="80" x2="30" y2="112"/>
-    <line x1="162" y1="80" x2="162" y2="112"/>
-  </g>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" fill="#111111"/>
+  <rect x="0" y="150" width="512" height="18" fill="#d9a520"/>
+  <rect x="0" y="344" width="512" height="18" fill="#d9a520"/>
+  <rect x="48" y="176" width="416" height="160" fill="#d9a520"/>
+  <rect x="66" y="194" width="380" height="124" fill="none" stroke="#111111" stroke-width="4"/>
+  <text x="256" y="264" text-anchor="middle" dominant-baseline="central" font-family="Rockwell, 'Rockwell Bold', serif" font-size="72" font-weight="700" letter-spacing="1" fill="#111111">URIGYM</text>
 </svg>
