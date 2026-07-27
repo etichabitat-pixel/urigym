@@ -25,7 +25,7 @@ export const OUTDOOR_OPTIONS = [
       { exercise: 'Dominades (o progressió NachoGST — vegeu latPulldownOrAssistedPullup)', sets: 3, reps: '3-8' },
       { exercise: 'Fondos en paral·leles', sets: 3, reps: '5-10' },
       { exercise: 'Elevacions de cames penjat', sets: 3, reps: '8-12' },
-      { exercise: "Sentadilles a una cama / step-ups a un banc", sets: 3, reps: '8-10 per cama' },
+      { exercise: "Esquats a una cama / pujades a un banc", sets: 3, reps: '8-10 per cama' },
     ],
     cooldown: 'Estiraments de braços, espatlles i cames, 5 min.',
   },

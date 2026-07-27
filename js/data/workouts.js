@@ -79,9 +79,9 @@ export function getWorkoutUsagesForExercise(exerciseId) {
 }
 
 export const GYM_WARMUP = [
-  { phase: 'Raise', duration: '3-5 min', description: 'Bici estàtica o cinta suau per pujar les pulsacions.' },
-  { phase: 'Activate/Mobilize', duration: '3 min', description: "Mobilitat dinàmica de malucs i espatlles, squats amb pes corporal, cat-cow." },
-  { phase: 'Potentiate', duration: '2 min', description: "1-2 sèries d'aproximació del primer exercici, pujant de pes fins al pes de treball." },
+  { phase: 'Pujada de pulsacions', duration: '3-5 min', description: 'Bici estàtica o cinta suau per pujar les pulsacions.' },
+  { phase: 'Activació i mobilitat', duration: '3 min', description: "Mobilitat dinàmica de malucs i espatlles, esquats amb pes corporal, postura del gat-camell." },
+  { phase: 'Potenciació', duration: '2 min', description: "1-2 sèries d'aproximació del primer exercici, pujant de pes fins al pes de treball." },
 ];
 
 export const COOLDOWN_STRETCH = [

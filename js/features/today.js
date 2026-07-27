@@ -124,7 +124,7 @@ async function renderExerciseDetail(ex, homeInfo) {
 function warmupSection() {
   return `
     <div class="card">
-      <h3>Escalfament (RAMP)</h3>
+      <h3>Escalfament</h3>
       ${GYM_WARMUP.map((w) => `<p><strong>${w.phase}</strong> (${w.duration}): ${w.description}</p>`).join('')}
     </div>
   `;
